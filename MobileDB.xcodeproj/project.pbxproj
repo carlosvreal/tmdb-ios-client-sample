@@ -19,6 +19,8 @@
 		67A0B5302115ED3400C8C82C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B52F2115ED3400C8C82C /* Settings.swift */; };
 		67A0B539211636D200C8C82C /* DictionaryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B538211636D200C8C82C /* DictionaryExtension.swift */; };
 		67A0B53D2116399900C8C82C /* MoviesAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B53C2116399900C8C82C /* MoviesAPITest.swift */; };
+		7BE2229B6CBD0DD91A07B04C /* Pods_MobileDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */; };
+		A27FA5784BD720E9A51FBADC /* Pods_MobileDBTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 241728D2E0E19A67978BC526 /* Pods_MobileDBTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +34,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0043DC569E73B9D2F1CFD7B4 /* Pods-MobileDB.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDB.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB.debug.xcconfig"; sourceTree = "<group>"; };
+		0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		241728D2E0E19A67978BC526 /* Pods_MobileDBTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDBTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		338E461EDC8B4319FAAB09F5 /* Pods-MobileDB.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDB.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB.release.xcconfig"; sourceTree = "<group>"; };
+		36CA5800DB188ECB6CDBD711 /* Pods-MobileDBTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDBTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDBTests/Pods-MobileDBTests.release.xcconfig"; sourceTree = "<group>"; };
 		675276A221114644001FB501 /* MobileDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		675276A521114645001FB501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		675276A721114645001FB501 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +55,7 @@
 		67A0B52F2115ED3400C8C82C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		67A0B538211636D200C8C82C /* DictionaryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtension.swift; sourceTree = "<group>"; };
 		67A0B53C2116399900C8C82C /* MoviesAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesAPITest.swift; sourceTree = "<group>"; };
+		D848CC9DA61A66EF583059D1 /* Pods-MobileDBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDBTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDBTests/Pods-MobileDBTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BE2229B6CBD0DD91A07B04C /* Pods_MobileDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,18 +71,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A27FA5784BD720E9A51FBADC /* Pods_MobileDBTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		291F7FBEC562EF7D6DB9ABBA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */,
+				241728D2E0E19A67978BC526 /* Pods_MobileDBTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6752769921114644001FB501 = {
 			isa = PBXGroup;
 			children = (
 				675276A421114644001FB501 /* MobileDB */,
 				675276B921114647001FB501 /* MobileDBTests */,
 				675276A321114644001FB501 /* Products */,
+				7E82315E109B4099EBD08941 /* Pods */,
+				291F7FBEC562EF7D6DB9ABBA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,6 +191,17 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		7E82315E109B4099EBD08941 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0043DC569E73B9D2F1CFD7B4 /* Pods-MobileDB.debug.xcconfig */,
+				338E461EDC8B4319FAAB09F5 /* Pods-MobileDB.release.xcconfig */,
+				D848CC9DA61A66EF583059D1 /* Pods-MobileDBTests.debug.xcconfig */,
+				36CA5800DB188ECB6CDBD711 /* Pods-MobileDBTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -177,9 +209,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 675276BF21114647001FB501 /* Build configuration list for PBXNativeTarget "MobileDB" */;
 			buildPhases = (
+				447858C04EA72E00A19E59BD /* [CP] Check Pods Manifest.lock */,
 				6752769E21114644001FB501 /* Sources */,
 				6752769F21114644001FB501 /* Frameworks */,
 				675276A021114644001FB501 /* Resources */,
+				63EBC776A8CCB937ADD30383 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -194,9 +228,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 675276C221114647001FB501 /* Build configuration list for PBXNativeTarget "MobileDBTests" */;
 			buildPhases = (
+				C6CBD2AC2C0A8E7B34563078 /* [CP] Check Pods Manifest.lock */,
 				675276B221114647001FB501 /* Sources */,
 				675276B321114647001FB501 /* Frameworks */,
 				675276B421114647001FB501 /* Resources */,
+				2DF41C9EF786F72154C7F171 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -266,6 +302,87 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2DF41C9EF786F72154C7F171 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MobileDBTests/Pods-MobileDBTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
+				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MobileDBTests/Pods-MobileDBTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		447858C04EA72E00A19E59BD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MobileDB-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		63EBC776A8CCB937ADD30383 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C6CBD2AC2C0A8E7B34563078 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MobileDBTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6752769E21114644001FB501 /* Sources */ = {
@@ -436,6 +553,7 @@
 		};
 		675276C021114647001FB501 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0043DC569E73B9D2F1CFD7B4 /* Pods-MobileDB.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
@@ -456,6 +574,7 @@
 		};
 		675276C121114647001FB501 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 338E461EDC8B4319FAAB09F5 /* Pods-MobileDB.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
@@ -476,6 +595,7 @@
 		};
 		675276C321114647001FB501 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D848CC9DA61A66EF583059D1 /* Pods-MobileDBTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -497,6 +617,7 @@
 		};
 		675276C421114647001FB501 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 36CA5800DB188ECB6CDBD711 /* Pods-MobileDBTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";

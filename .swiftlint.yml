@@ -1,0 +1,26 @@
+included:
+  - MobileDB
+  
+exclude:
+  - Pods
+
+disabled_rules:
+  # warnings
+  - trailing_whitespace       # point out lines with ending whitespaces; because in our project tabs are spaces, this also warns about blank lines as well
+  - function_body_length      # function body should span 40 lines or less excluding comments and whitespace
+  - nesting                   # there should be at most 1 type nested; AppearanceManager and LocalizedMessages have many nested enums
+  - large_tuple               # Tuples shouldn't have too many members. Create a custom type instead.
+  - private_over_fileprivate  # Prefer private over fileprivate declarations.
+
+  #errors
+  - function_parameter_count  # function should have 5 parameters or less
+  - type_body_length          # type body should span 200 lines or less excluding whitespace and comments
+  - file_length               # File should contain 400 lines or less
+  - empty_enum_arguments
+  
+#configurable rules
+identifier_name:
+  min_length: 0               # default is 3
+type_name:
+  min_length: 0               # default is 3
+  max_length: 60              # default is 40

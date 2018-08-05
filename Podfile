@@ -7,6 +7,7 @@ target 'MobileDB' do
   # Pods for MobileDB
   pod 'RxSwift',    '~> 4.0'
   pod 'RxCocoa',    '~> 4.0'
+  pod 'SwiftLint'
 
   target 'MobileDBTests' do
     inherit! :search_paths

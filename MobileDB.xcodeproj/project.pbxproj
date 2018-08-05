@@ -325,6 +325,7 @@
 				6752769E21114644001FB501 /* Sources */,
 				6752769F21114644001FB501 /* Frameworks */,
 				675276A021114644001FB501 /* Resources */,
+				674641DA21177DB600FD5183 /* ShellScript */,
 				63EBC776A8CCB937ADD30383 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -484,6 +485,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		674641DA21177DB600FD5183 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"";
 		};
 		C6CBD2AC2C0A8E7B34563078 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -22,4 +22,6 @@ protocol MoviesServiceProtocol {
 
 protocol ConfigServiceProtocol {
   func fetchConfig() -> Completable
+  func loadBackdropImage(for path: String) -> Single<UIImage>
+  func loadPoster(for path: String) -> Single<UIImage>
 }

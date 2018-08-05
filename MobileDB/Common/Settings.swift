@@ -17,8 +17,21 @@ private struct AppSettings: Codable {
   let apiKey: String
 }
 
+private struct DefaultConfig {
+  static let baseImageUrlKey = "baseImageUrl"
+  static let defaultImageURl = "http://image.tmdb.org/t/p/"
+}
+
 struct Settings {
-  static var baseImageUrl = "http://image.tmdb.org/t/p/"
+  static var baseImageUrl: String {
+    set {
+      UserDefaults.standard.setValue(baseImageUrl, forKey: DefaultConfig.baseImageUrlKey)
+    }
+    get {
+      let urlString = UserDefaults.standard.string(forKey: DefaultConfig.baseImageUrlKey)
+      return urlString ?? DefaultConfig.defaultImageURl
+    }
+  }
   
   static var apiKey: String {
     guard let url = Bundle.main.url(forResource: "AppSettings", withExtension: "plist"),

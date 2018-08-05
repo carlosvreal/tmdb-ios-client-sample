@@ -11,8 +11,15 @@ import Foundation
 extension Dictionary {
   /// Format url params
   func formatToUrlParams() -> String {
+    guard !self.isEmpty else { return "" }
+    
     return self.reduce("?", { (result, item) in
-      result + "&" + "\(item.key)=\(item.value)"
+      let newParam = "\(item.key)=\(item.value)"
+      guard !result.isEmpty, result != "?" else {
+        return result + newParam
+      }
+      
+      return result + "&" + newParam
     })
   }
 }

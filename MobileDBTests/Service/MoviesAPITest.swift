@@ -86,7 +86,7 @@ class MoviesAPITest: XCTestCase {
   }
   
   func testValidUrlRequest_MovieDetail() {
-    let urlRequest = MoviesAPI.movie(id: "1").urlRequest
+    let urlRequest = MoviesAPI.movie(id: "297761").urlRequest
     
     XCTAssertNotNil(urlRequest)
   }
@@ -96,13 +96,13 @@ class MoviesAPITest: XCTestCase {
   }
   
   func testValidParams_MovieDetail() {
-    let params = MoviesAPI.movie(id: "1").params
+    let params = MoviesAPI.movie(id: "297761").params
     
     XCTAssertFalse(params!.isEmpty)
   }
   
   func testValidAPIKeyParam_MovieDetail() {
-    let params = MoviesAPI.movie(id: "1").params!
+    let params = MoviesAPI.movie(id: "297761").params!
     let apiKey = params[ApiConstants.apiKey] as? String
     
     XCTAssertNotNil(apiKey)
@@ -165,8 +165,14 @@ class MoviesAPITest: XCTestCase {
     XCTAssertEqual(MoviesAPI.search(query: "", page: 0), MoviesAPI.search(query: "", page: 0))
   }
   
+  func testValidUrlRequest_Search() {
+    let urlRequest = MoviesAPI.search(query: "Suicide Squad", page: 1).urlRequest
+    
+    XCTAssertNotNil(urlRequest)
+  }
+  
   func testValidAPIKeyParam_Search() {
-    let params = MoviesAPI.search(query: "1", page: 1).params!
+    let params = MoviesAPI.search(query: "Suicide Squad", page: 1).params!
     let apiKey = params[ApiConstants.apiKey] as? String
     
     XCTAssertNotNil(apiKey)

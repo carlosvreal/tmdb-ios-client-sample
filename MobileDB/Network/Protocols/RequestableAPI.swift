@@ -17,7 +17,7 @@ enum HttpMethod: String, CustomStringConvertible {
 }
 
 protocol RequestableAPI {
-  var baseUrlPath: String { get }
+  var baseUrlString: String { get }
   var path: String? { get }
   var httpMethod: HttpMethod { get }
   var params: [String: Any]? { get }

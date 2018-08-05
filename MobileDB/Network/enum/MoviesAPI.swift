@@ -31,7 +31,7 @@ enum MoviesAPI {
 
 // MARK: - Extension RequestableAPI
 extension MoviesAPI: RequestableAPI {
-  var baseUrlPath: String {
+  var baseUrlString: String {
     switch self {
     case .backdropImage, .posterImage:
       return Settings.baseImageUrl
@@ -88,7 +88,7 @@ extension MoviesAPI: RequestableAPI {
       var params = defaultParam
       params[ApiConstants.language] = ApiConstants.enUSLanguage
       params[ApiConstants.page] = "\(page)"
-      params[ApiConstants.query] = "\(query)"
+      params[ApiConstants.query] = "\(query)".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
       params[ApiConstants.includeAdult] = "false"
       
       return params
@@ -102,19 +102,16 @@ extension MoviesAPI: RequestableAPI {
   }
   
   var urlRequest: URLRequest? {
-    guard let baseUrl = URL(string: baseUrlPath),
-      let path = path else { return nil }
+    guard let path = path else { return nil }
     
-    var url = baseUrl.appendingPathComponent(path, isDirectory: false)
-
+    let basePath: String
     if let params = params {
-      guard let encodedParams = params.formatToUrlParams().addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-        return nil
-      }
-      
-      url = url.appendingPathComponent(encodedParams)
+      basePath = path + params.formatToUrlParams()
+    } else {
+      basePath = path
     }
     
+    guard let url = URL(string: baseUrlString + basePath) else { return nil }
     var urlRequest = URLRequest(url: url)
     urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
     urlRequest.timeoutInterval = 30

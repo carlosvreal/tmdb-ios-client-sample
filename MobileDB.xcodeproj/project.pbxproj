@@ -170,7 +170,6 @@
 			children = (
 				67A0B52A2115E1E700C8C82C /* enum */,
 				67A0B5252115E09100C8C82C /* Protocols */,
-				67A0B52F2115ED3400C8C82C /* Settings.swift */,
 				6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */,
 			);
 			path = Network;
@@ -198,6 +197,7 @@
 		67A0B536211636B500C8C82C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				67A0B52F2115ED3400C8C82C /* Settings.swift */,
 				67A0B537211636BC00C8C82C /* Extensions */,
 			);
 			path = Common;

@@ -9,14 +9,8 @@
 import Foundation
 
 struct Settings {
-  struct AppSettings: Codable {
-    private enum CodingKeys: String, CodingKey {
-      case apiKey = "api_key"
-    }
-    
-    let apiKey: String
-  }
-  
+  static var baseImageUrl = "http://image.tmdb.org/t/p/"
+
   static var apiKey: String {
     guard let url = Bundle.main.url(forResource: "AppSettings", withExtension: "plist"),
       let data = try? Data(contentsOf: url),

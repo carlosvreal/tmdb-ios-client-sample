@@ -19,3 +19,7 @@ protocol MoviesServiceProtocol {
   func genres() -> Single<[Genre]>
   func search(for query: String, page: Int) -> Single<[Movie]>
 }
+
+protocol ConfigServiceProtocol {
+  func fetchConfig() -> Completable
+}

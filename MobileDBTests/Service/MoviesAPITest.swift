@@ -165,10 +165,6 @@ class MoviesAPITest: XCTestCase {
     XCTAssertEqual(MoviesAPI.search(query: "", page: 0), MoviesAPI.search(query: "", page: 0))
   }
   
-  func testInvalidUrlRequest_Search() {
-    XCTAssertNil(MoviesAPI.search(query: "", page: 0).urlRequest)
-  }
-  
   func testValidAPIKeyParam_Search() {
     let params = MoviesAPI.search(query: "1", page: 1).params!
     let apiKey = params[ApiConstants.apiKey] as? String
@@ -191,5 +187,25 @@ class MoviesAPITest: XCTestCase {
     
     XCTAssertNotNil(query)
     XCTAssertFalse(query!.isEmpty)
+  }
+  
+  // MARK: Backdrop
+  
+  func testMovieAPI_Backdrop() {
+    XCTAssertEqual(MoviesAPI.backdropImage(path: ""), MoviesAPI.backdropImage(path: ""))
+  }
+  
+  func testValidUrlRequest_Backdrop() {
+    XCTAssertNotNil(MoviesAPI.backdropImage(path: "/ndlQ2Cuc3cjTL7lTynw6I4boP4S.jpg").urlRequest)
+  }
+  
+  // MARK: Poster
+  
+  func testMovieAPI_Poster() {
+    XCTAssertEqual(MoviesAPI.posterImage(path: ""), MoviesAPI.posterImage(path: ""))
+  }
+  
+  func testValidUrlRequest_Poster() {
+    XCTAssertNotNil(MoviesAPI.posterImage(path: "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg").urlRequest)
   }
 }

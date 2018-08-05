@@ -16,6 +16,7 @@
 		6746419C21169B2800FD5183 /* MoviesServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */; };
 		6746419E2116A22C00FD5183 /* Movies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746419D2116A22C00FD5183 /* Movies.swift */; };
 		674641A42116A72000FD5183 /* ConfigServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641A32116A72000FD5183 /* ConfigServiceProvider.swift */; };
+		674641A821171F8700FD5183 /* DeviceSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641A721171F8700FD5183 /* DeviceSize.swift */; };
 		675276A621114645001FB501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675276A521114645001FB501 /* AppDelegate.swift */; };
 		675276AB21114645001FB501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 675276A921114645001FB501 /* Main.storyboard */; };
 		675276AD21114647001FB501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 675276AC21114647001FB501 /* Assets.xcassets */; };
@@ -56,6 +57,7 @@
 		6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesServiceProvider.swift; sourceTree = "<group>"; };
 		6746419D2116A22C00FD5183 /* Movies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movies.swift; sourceTree = "<group>"; };
 		674641A32116A72000FD5183 /* ConfigServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigServiceProvider.swift; sourceTree = "<group>"; };
+		674641A721171F8700FD5183 /* DeviceSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSize.swift; sourceTree = "<group>"; };
 		675276A221114644001FB501 /* MobileDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		675276A521114645001FB501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		675276AA21114645001FB501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 			children = (
 				67A0B52F2115ED3400C8C82C /* Settings.swift */,
 				67A0B537211636BC00C8C82C /* Extensions */,
+				674641A721171F8700FD5183 /* DeviceSize.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -427,6 +430,7 @@
 				6746418F2116971500FD5183 /* ServiceProviderProtocol.swift in Sources */,
 				67A0B52E2115E2DC00C8C82C /* MoviesAPI.swift in Sources */,
 				67A0B5272115E17900C8C82C /* RequestableAPI.swift in Sources */,
+				674641A821171F8700FD5183 /* DeviceSize.swift in Sources */,
 				674641932116984100FD5183 /* ServiceError.swift in Sources */,
 				674641A42116A72000FD5183 /* ConfigServiceProvider.swift in Sources */,
 				67A0B539211636D200C8C82C /* DictionaryExtension.swift in Sources */,
@@ -608,7 +612,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -629,7 +633,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -13,3 +13,7 @@ protocol ServiceProviderProtocol {
   
   init(session: SessionHandler)
 }
+
+protocol MoviesServiceProtocol {
+  func fetchMovies(from page: Int) -> Single<[Movie]>
+}

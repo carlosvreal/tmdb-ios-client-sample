@@ -15,10 +15,10 @@ class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
     self.session = session
   }
   
-  func fetchConfig() -> Completable {
+  func fetchConfig() -> Single<String> {
     let requestType = MoviesAPI.configuration
     
-    return Completable.create { [weak self] completable in
+    return Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {
         case .success(let data):
@@ -26,14 +26,12 @@ class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
             let value = json as? [String: Any],
             let images = value["images"] as? [String: Any],
             let imagesBaseUrl = images["secure_base_url"] as? String else {
-              return completable(.error(ServiceError.invalidFormatData))
+              return single(.error(ServiceError.invalidFormatData))
           }
           
-          Settings.baseImageUrl = imagesBaseUrl
-          
-          completable(.completed)
+          single(.success(imagesBaseUrl))
         case .error(let error):
-          completable(.error(error))
+          single(.error(error))
         }
       }
       

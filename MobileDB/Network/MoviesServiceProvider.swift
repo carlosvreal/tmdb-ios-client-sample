@@ -37,4 +37,26 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
       return Disposables.create()
     }
   }
+  
+  func genres() -> Single<[Genre]> {
+    let requestType = MoviesAPI.genres
+    
+    return Single.create { [weak self] single in
+      self?.session.executeRequest(with: requestType) { result in
+        switch result {
+        case .success(let data):
+          do {
+            let decodedData = try JSONDecoder().decode([Genre].self, from: data)
+            single(.success(decodedData))
+          } catch {
+            single(.error(ServiceError.invalidResponseData))
+          }
+        case .error(let error):
+          single(.error(error))
+        }
+      }
+      
+      return Disposables.create()
+    }
+  }
 }

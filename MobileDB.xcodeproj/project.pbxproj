@@ -11,6 +11,7 @@
 		674641912116981400FD5183 /* SessionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641902116981400FD5183 /* SessionHandler.swift */; };
 		674641932116984100FD5183 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641922116984100FD5183 /* ServiceError.swift */; };
 		6746419A2116992A00FD5183 /* URLSessionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641992116992A00FD5183 /* URLSessionExtension.swift */; };
+		6746419C21169B2800FD5183 /* MoviesServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */; };
 		675276A621114645001FB501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675276A521114645001FB501 /* AppDelegate.swift */; };
 		675276AB21114645001FB501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 675276A921114645001FB501 /* Main.storyboard */; };
 		675276AD21114647001FB501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 675276AC21114647001FB501 /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 		674641902116981400FD5183 /* SessionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionHandler.swift; sourceTree = "<group>"; };
 		674641922116984100FD5183 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		674641992116992A00FD5183 /* URLSessionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionExtension.swift; sourceTree = "<group>"; };
+		6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesServiceProvider.swift; sourceTree = "<group>"; };
 		675276A221114644001FB501 /* MobileDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		675276A521114645001FB501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		675276AA21114645001FB501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				67A0B52A2115E1E700C8C82C /* enum */,
 				67A0B5252115E09100C8C82C /* Protocols */,
 				67A0B52F2115ED3400C8C82C /* Settings.swift */,
+				6746419B21169B2800FD5183 /* MoviesServiceProvider.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				674641932116984100FD5183 /* ServiceError.swift in Sources */,
 				67A0B539211636D200C8C82C /* DictionaryExtension.swift in Sources */,
 				675276A621114645001FB501 /* AppDelegate.swift in Sources */,
+				6746419C21169B2800FD5183 /* MoviesServiceProvider.swift in Sources */,
 				6746419A2116992A00FD5183 /* URLSessionExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

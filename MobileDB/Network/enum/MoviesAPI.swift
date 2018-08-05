@@ -15,21 +15,29 @@ struct ApiConstants {
   static let query = "query"
   static let includeAdult = "include_adult"
   static let enUSLanguage = "en-US"
+  static let defaultServiceURL = "https://api.themoviedb.org/3/"
 }
 
 /// TMDB API actions
 enum MoviesAPI {
+  case backdropImage(path: String)
   case configuration
   case genres
   case movie(id: String)
   case movies(page: Int)
+  case posterImage(path: String)
   case search(query: String, page: Int)
 }
 
 // MARK: - Extension RequestableAPI
 extension MoviesAPI: RequestableAPI {
   var baseUrlPath: String {
-    return "https://api.themoviedb.org/3/"
+    switch self {
+    case .backdropImage, .posterImage:
+      return Settings.baseImageUrl
+    default:
+      return ApiConstants.defaultServiceURL
+    }
   }
   
   var path: String? {
@@ -41,6 +49,12 @@ extension MoviesAPI: RequestableAPI {
       return "movie/\(id)"
     case .movies: return "movie/popular"
     case .search: return "search/movie"
+    case .backdropImage(let path):
+      guard !path.isEmpty else { return nil }
+      return "\(BackdropImage.bestSize().rawValue)\(path)"
+    case .posterImage(let path):
+      guard !path.isEmpty else { return nil }
+      return "\(PosterImage.bestSize().rawValue)\(path)"
     }
   }
   
@@ -78,6 +92,8 @@ extension MoviesAPI: RequestableAPI {
       params[ApiConstants.includeAdult] = "false"
       
       return params
+    case .backdropImage, .posterImage:
+      return nil
     }
   }
   
@@ -87,15 +103,17 @@ extension MoviesAPI: RequestableAPI {
   
   var urlRequest: URLRequest? {
     guard let baseUrl = URL(string: baseUrlPath),
-      let path = path,
-      let params = params else { return nil }
+      let path = path else { return nil }
     
-    guard let encodedParams = params.formatToUrlParams().addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-      return nil
+    var url = baseUrl.appendingPathComponent(path, isDirectory: false)
+
+    if let params = params {
+      guard let encodedParams = params.formatToUrlParams().addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+        return nil
+      }
+      
+      url = url.appendingPathComponent(encodedParams)
     }
-    
-    let url = baseUrl.appendingPathComponent(path, isDirectory: false)
-      .appendingPathComponent(encodedParams)
     
     var urlRequest = URLRequest(url: url)
     urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
@@ -106,6 +124,7 @@ extension MoviesAPI: RequestableAPI {
   }
 }
 
+// MARK: - Extension Equatable
 extension MoviesAPI: Equatable {
   static func == (lhs: MoviesAPI, rhs: MoviesAPI) -> Bool {
     switch (lhs, rhs) {
@@ -118,6 +137,10 @@ extension MoviesAPI: Equatable {
     case (.movies, .movies):
       return true
     case (.search, .search):
+      return true
+    case (.backdropImage, .backdropImage):
+      return true
+    case (.posterImage, .posterImage):
       return true
     default:
       return false

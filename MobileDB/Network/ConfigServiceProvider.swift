@@ -26,7 +26,7 @@ class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
             let value = json as? [String: Any],
             let images = value["images"] as? [String: Any],
             let imagesBaseUrl = images["secure_base_url"] as? String else {
-              return completable(.error(ServiceError.invalidResponseData))
+              return completable(.error(ServiceError.invalidFormatData))
           }
           
           Settings.baseImageUrl = imagesBaseUrl
@@ -55,7 +55,7 @@ class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
         switch result {
         case .success(let data):
           guard let image = UIImage(data: data) else {
-            return single(.error(ServiceError.invalidResponseData))
+            return single(.error(ServiceError.invalidFormatData))
           }
           
           single(.success(image))

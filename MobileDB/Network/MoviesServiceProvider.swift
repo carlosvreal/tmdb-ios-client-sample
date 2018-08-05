@@ -27,7 +27,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
             let decodedData = try JSONDecoder().decode(Movies.self, from: data)
             single(.success(decodedData.results))
           } catch {
-            single(.error(ServiceError.invalidResponseData))
+            single(.error(ServiceError.invalidFormatData))
           }
         case .error(let error):
           single(.error(error))
@@ -46,10 +46,10 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
         switch result {
         case .success(let data):
           do {
-            let decodedData = try JSONDecoder().decode([Genre].self, from: data)
-            single(.success(decodedData))
+            let decodedData = try JSONDecoder().decode(Genres.self, from: data)
+            single(.success(decodedData.genres))
           } catch {
-            single(.error(ServiceError.invalidResponseData))
+            single(.error(ServiceError.invalidFormatData))
           }
         case .error(let error):
           single(.error(error))
@@ -71,7 +71,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
             let decodedData = try JSONDecoder().decode(Movies.self, from: data)
             single(.success(decodedData.results))
           } catch {
-            single(.error(ServiceError.invalidResponseData))
+            single(.error(ServiceError.invalidFormatData))
           }
         case .error(let error):
           single(.error(error))

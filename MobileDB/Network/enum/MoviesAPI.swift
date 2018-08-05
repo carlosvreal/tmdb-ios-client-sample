@@ -77,13 +77,14 @@ extension MoviesAPI: RequestableAPI {
       
       return params
     case .movies(let page):
+      guard page > 0 else { return nil }
       var params = defaultParam
       params[ApiConstants.language] = ApiConstants.enUSLanguage
       params[ApiConstants.page] = "\(page)"
       
       return params
     case .search(let query, let page):
-      guard !query.isEmpty else { return nil }
+      guard !query.isEmpty, page > 0 else { return nil }
       
       var params = defaultParam
       params[ApiConstants.language] = ApiConstants.enUSLanguage

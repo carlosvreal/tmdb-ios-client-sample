@@ -43,3 +43,9 @@ extension Movie {
     case rating = "vote_average"
   }
 }
+
+extension Movie: Equatable {
+  static func == (lhs: Movie, rhs: Movie) -> Bool {
+    return lhs.id == rhs.id
+  }
+}

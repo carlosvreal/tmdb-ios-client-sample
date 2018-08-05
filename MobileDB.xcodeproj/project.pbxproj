@@ -18,6 +18,19 @@
 		674641A22116A62D00FD5183 /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641A12116A62D00FD5183 /* ImageSize.swift */; };
 		674641A42116A72000FD5183 /* ConfigServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641A32116A72000FD5183 /* ConfigServiceProvider.swift */; };
 		674641A821171F8700FD5183 /* DeviceSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641A721171F8700FD5183 /* DeviceSize.swift */; };
+		674641AE211754AE00FD5183 /* MoviesServiceProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641AD211754AE00FD5183 /* MoviesServiceProviderTests.swift */; };
+		674641B12117568C00FD5183 /* SessionHandlerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641B02117568C00FD5183 /* SessionHandlerMock.swift */; };
+		674641B321175CB900FD5183 /* StubData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641B221175CB900FD5183 /* StubData.swift */; };
+		674641B921175FE700FD5183 /* movies_page_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641B421175FE600FD5183 /* movies_page_1.json */; };
+		674641BA21175FE700FD5183 /* configuration.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641B521175FE600FD5183 /* configuration.json */; };
+		674641BB21175FE700FD5183 /* movie_detail.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641B621175FE600FD5183 /* movie_detail.json */; };
+		674641BC21175FE700FD5183 /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641B721175FE600FD5183 /* genres.json */; };
+		674641D0211760CC00FD5183 /* movies_page_1_empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641C6211760CC00FD5183 /* movies_page_1_empty.json */; };
+		674641D1211760CC00FD5183 /* movie_detail_empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641C7211760CC00FD5183 /* movie_detail_empty.json */; };
+		674641D2211760CC00FD5183 /* genres_empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641C8211760CC00FD5183 /* genres_empty.json */; };
+		674641D3211760CC00FD5183 /* configuration_empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641C9211760CC00FD5183 /* configuration_empty.json */; };
+		674641D4211760CC00FD5183 /* search_page_1_empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 674641CA211760CC00FD5183 /* search_page_1_empty.json */; };
+		674641D72117643000FD5183 /* RxBlockingExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674641D62117643000FD5183 /* RxBlockingExtension.swift */; };
 		675276A621114645001FB501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675276A521114645001FB501 /* AppDelegate.swift */; };
 		675276AB21114645001FB501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 675276A921114645001FB501 /* Main.storyboard */; };
 		675276AD21114647001FB501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 675276AC21114647001FB501 /* Assets.xcassets */; };
@@ -60,6 +73,19 @@
 		674641A12116A62D00FD5183 /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
 		674641A32116A72000FD5183 /* ConfigServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigServiceProvider.swift; sourceTree = "<group>"; };
 		674641A721171F8700FD5183 /* DeviceSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSize.swift; sourceTree = "<group>"; };
+		674641AD211754AE00FD5183 /* MoviesServiceProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesServiceProviderTests.swift; sourceTree = "<group>"; };
+		674641B02117568C00FD5183 /* SessionHandlerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionHandlerMock.swift; sourceTree = "<group>"; };
+		674641B221175CB900FD5183 /* StubData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubData.swift; sourceTree = "<group>"; };
+		674641B421175FE600FD5183 /* movies_page_1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movies_page_1.json; sourceTree = "<group>"; };
+		674641B521175FE600FD5183 /* configuration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = configuration.json; sourceTree = "<group>"; };
+		674641B621175FE600FD5183 /* movie_detail.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movie_detail.json; sourceTree = "<group>"; };
+		674641B721175FE600FD5183 /* genres.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = genres.json; sourceTree = "<group>"; };
+		674641C6211760CC00FD5183 /* movies_page_1_empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movies_page_1_empty.json; sourceTree = "<group>"; };
+		674641C7211760CC00FD5183 /* movie_detail_empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movie_detail_empty.json; sourceTree = "<group>"; };
+		674641C8211760CC00FD5183 /* genres_empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = genres_empty.json; sourceTree = "<group>"; };
+		674641C9211760CC00FD5183 /* configuration_empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = configuration_empty.json; sourceTree = "<group>"; };
+		674641CA211760CC00FD5183 /* search_page_1_empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = search_page_1_empty.json; sourceTree = "<group>"; };
+		674641D62117643000FD5183 /* RxBlockingExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxBlockingExtension.swift; sourceTree = "<group>"; };
 		675276A221114644001FB501 /* MobileDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		675276A521114645001FB501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		675276AA21114645001FB501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -117,6 +143,48 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		674641AF2117557200FD5183 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				674641BE21175FFC00FD5183 /* StubResponse */,
+				674641B02117568C00FD5183 /* SessionHandlerMock.swift */,
+				674641B221175CB900FD5183 /* StubData.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		674641BE21175FFC00FD5183 /* StubResponse */ = {
+			isa = PBXGroup;
+			children = (
+				674641C5211760CC00FD5183 /* EmptyData */,
+				674641B521175FE600FD5183 /* configuration.json */,
+				674641B721175FE600FD5183 /* genres.json */,
+				674641B621175FE600FD5183 /* movie_detail.json */,
+				674641B421175FE600FD5183 /* movies_page_1.json */,
+			);
+			path = StubResponse;
+			sourceTree = "<group>";
+		};
+		674641C5211760CC00FD5183 /* EmptyData */ = {
+			isa = PBXGroup;
+			children = (
+				674641C6211760CC00FD5183 /* movies_page_1_empty.json */,
+				674641C7211760CC00FD5183 /* movie_detail_empty.json */,
+				674641C8211760CC00FD5183 /* genres_empty.json */,
+				674641C9211760CC00FD5183 /* configuration_empty.json */,
+				674641CA211760CC00FD5183 /* search_page_1_empty.json */,
+			);
+			path = EmptyData;
+			sourceTree = "<group>";
+		};
+		674641D52117641B00FD5183 /* Rx */ = {
+			isa = PBXGroup;
+			children = (
+				674641D62117643000FD5183 /* RxBlockingExtension.swift */,
+			);
+			path = Rx;
+			sourceTree = "<group>";
+		};
 		6752769921114644001FB501 = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +220,8 @@
 		675276B921114647001FB501 /* MobileDBTests */ = {
 			isa = PBXGroup;
 			children = (
+				674641D52117641B00FD5183 /* Rx */,
+				674641AF2117557200FD5183 /* Mock */,
 				67A0B53B2116396C00C8C82C /* Service */,
 				675276BA21114647001FB501 /* MobileDBTests.swift */,
 				675276BC21114647001FB501 /* Info.plist */,
@@ -224,6 +294,7 @@
 		67A0B53B2116396C00C8C82C /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				674641AD211754AE00FD5183 /* MoviesServiceProviderTests.swift */,
 				67A0B53C2116399900C8C82C /* MoviesAPITest.swift */,
 			);
 			path = Service;
@@ -336,6 +407,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				674641BA21175FE700FD5183 /* configuration.json in Resources */,
+				674641BB21175FE700FD5183 /* movie_detail.json in Resources */,
+				674641B921175FE700FD5183 /* movies_page_1.json in Resources */,
+				674641D1211760CC00FD5183 /* movie_detail_empty.json in Resources */,
+				674641BC21175FE700FD5183 /* genres.json in Resources */,
+				674641D4211760CC00FD5183 /* search_page_1_empty.json in Resources */,
+				674641D2211760CC00FD5183 /* genres_empty.json in Resources */,
+				674641D3211760CC00FD5183 /* configuration_empty.json in Resources */,
+				674641D0211760CC00FD5183 /* movies_page_1_empty.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,8 +530,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				674641D72117643000FD5183 /* RxBlockingExtension.swift in Sources */,
+				674641AE211754AE00FD5183 /* MoviesServiceProviderTests.swift in Sources */,
+				674641B321175CB900FD5183 /* StubData.swift in Sources */,
 				675276BB21114647001FB501 /* MobileDBTests.swift in Sources */,
 				67A0B53D2116399900C8C82C /* MoviesAPITest.swift in Sources */,
+				674641B12117568C00FD5183 /* SessionHandlerMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

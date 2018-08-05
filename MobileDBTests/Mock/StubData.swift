@@ -35,4 +35,11 @@ struct StubData {
     let encoded = try! JSONDecoder().decode(Genres.self, from: data)
     return encoded.genres
   }
+  
+  // MARK: Configuration
+  
+  static func configData(bundle: Bundle) -> Data {
+    let path = bundle.path(forResource: "configuration", ofType: "json")!
+    return try! Data(contentsOf: URL(fileURLWithPath: path))
+  }
 }

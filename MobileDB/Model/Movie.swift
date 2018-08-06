@@ -17,7 +17,7 @@ struct Movie: Codable {
   let language: String?
   let popularity: Double?
   let releaseDate: String?
-  let genresId: [Int]?
+  let genreIds: [Int]?
   let genres: [Genre]?
   let duration: Int?
   let rating: Double?
@@ -35,7 +35,7 @@ extension Movie {
     case language = "original_language"
     case popularity
     case releaseDate = "release_date"
-    case genresId = "genres_id"
+    case genreIds = "genre_ids"
     case genres
     case revenue
     case duration = "runtime"

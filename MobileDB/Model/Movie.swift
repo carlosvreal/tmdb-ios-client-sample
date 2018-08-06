@@ -8,6 +8,15 @@
 
 import Foundation
 
+struct SpokenLanguage: Codable {
+  enum CodingKeys: String, CodingKey {
+    case iso = "iso_639_1"
+    case name
+  }
+  let iso: String
+  let name: String
+}
+
 struct Movie: Codable {
   let id: Int?
   let title: String?
@@ -19,10 +28,11 @@ struct Movie: Codable {
   let releaseDate: String?
   let genreIds: [Int]?
   let genres: [Genre]?
-  let duration: Int?
+  let runtime: Int?
   let rating: Double?
   let revenue: Int?
   let homepage: String?
+  let spokenLanguage: [SpokenLanguage]?
 }
 
 extension Movie {
@@ -38,9 +48,10 @@ extension Movie {
     case genreIds = "genre_ids"
     case genres
     case revenue
-    case duration = "runtime"
+    case runtime
     case homepage
     case rating = "vote_average"
+    case spokenLanguage = "spoken_languages"
   }
 }
 

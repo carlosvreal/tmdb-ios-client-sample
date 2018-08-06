@@ -9,6 +9,7 @@
 import Foundation
 
 struct MovieDetailModel {
+  let id: Int?
   let title: String?
   let posterImagePath: String?
   let backdropImagePath: String?

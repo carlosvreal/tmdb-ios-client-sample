@@ -8,7 +8,7 @@
 
 import RxSwift
 
-final class MovieViewCell: UITableViewCell, CellIdentifier {
+final class MovieViewCell: UITableViewCell, ReusableIdentifier {
   @IBOutlet private weak var posterImageView: UIImageView!
   @IBOutlet private weak var title: UILabel!
   @IBOutlet private weak var genres: UILabel!

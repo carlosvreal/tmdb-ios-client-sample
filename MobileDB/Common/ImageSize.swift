@@ -49,10 +49,10 @@ struct BackdropImage {
     switch UIDevice.current.userInterfaceIdiom {
     case .phone:
       if Device.isIPhone8PlusOrX {
-        return .w780
+        return .w1280
       }
       
-      return .w300
+      return .w780
     case .pad:
       return .w1280
     default:

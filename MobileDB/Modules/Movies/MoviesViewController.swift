@@ -51,7 +51,7 @@ final class MoviesViewController: UIViewController {
     tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
       guard let cell = cell as? MovieViewCell else { return }
       
-      cell.viewModel.loadImage()
+      cell.viewModel.loadPosterImage()
     }).subscribe()
       .disposed(by: disposeBag)
     

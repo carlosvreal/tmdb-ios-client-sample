@@ -12,10 +12,19 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
+  let configService = ConfigServiceProvider()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    // Override point for customization after application launch.
+    
+    setupConfig()
     return true
+  }
+  
+  private func setupConfig() {
+    _ = configService.fetchConfig()
+      .subscribe(onSuccess: { baseImageUrl in
+        Settings.baseImageUrl = baseImageUrl
+      })
   }
 }

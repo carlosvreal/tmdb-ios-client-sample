@@ -16,7 +16,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
     self.session = session
   }
   
-  func fetchMovies(from page: Int) -> Single<[Movie]> {
+  func fetchMovies(from page: Int) -> Single<Movies> {
     let requestType = MoviesAPI.movies(page: page)
     
     return Single.create { [weak self] single in
@@ -25,7 +25,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
         case .success(let data):
           do {
             let decodedData = try JSONDecoder().decode(Movies.self, from: data)
-            single(.success(decodedData.results))
+            single(.success(decodedData))
           } catch {
             single(.error(ServiceError.invalidFormatData))
           }

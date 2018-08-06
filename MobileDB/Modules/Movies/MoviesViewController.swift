@@ -20,7 +20,6 @@ final class MoviesViewController: UIViewController {
     super.viewDidLoad()
     
     tableView.register(MovieViewCell.self)
-    tableView.rx.setDelegate(self).disposed(by: disposeBag)
     
     setupOutletsBinds()
   }
@@ -34,21 +33,20 @@ final class MoviesViewController: UIViewController {
     
     // Triggers next page
     tableView.rx.willDisplayCell
-      .filter { (_, indexPath) -> Bool in
+      .map { (_, indexPath) -> Bool in
         return indexPath.item == self.tableView.numberOfRows(inSection: 0) - 3
-      }.map { _ in }
+      }
+      .distinctUntilChanged()
+      .filter { $0 == true }
       .subscribe(onNext: { [weak self] _ in
-        self?.viewModel.nextPage()
+        self?.viewModel.nextPage.onNext(())
       }).disposed(by: disposeBag)
-  }
-}
-
-extension MoviesViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    guard let cell = cell as? MovieViewCell else {
-      preconditionFailure("Invalid cell type")
-    }
     
-    cell.viewModel.loadImage()
+    tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
+        guard let cell = cell as? MovieViewCell else { return }
+        
+        cell.viewModel.loadImage()
+      }).subscribe()
+      .disposed(by: disposeBag)
   }
 }

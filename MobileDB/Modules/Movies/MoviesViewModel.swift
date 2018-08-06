@@ -10,16 +10,15 @@ import RxSwift
 import RxCocoa
 
 final class MoviesViewModel {
-  private let dataSource = Variable<[MovieViewModel]>([])
-  private var page = 1
-  private var cachedGenres = Variable<[Genre]>([])
-  let errorMessage = PublishSubject<String>()
-  let isLoading = PublishSubject<Bool>()
-  
   var moviesDataSource: Driver<[MovieViewModel]> {
     return dataSource.asDriver()
   }
-  
+    
+  let dataSource = Variable<[MovieViewModel]>([])
+  let nextPage = PublishSubject<Void>()
+  let errorMessage = PublishSubject<String>()
+  let isLoading = PublishSubject<Bool>()
+  private var page = 0
   private let service: MoviesServiceProtocol
   private let disposeBag: DisposeBag
   
@@ -27,21 +26,44 @@ final class MoviesViewModel {
     self.service = service
     self.disposeBag = DisposeBag()
     
-    nextPage()
+    setupServiceCalls()
+    
+    // load the fist page
+    nextPage.onNext(())
+  }
+}
+
+// MARK: Setup observables
+private extension MoviesViewModel {
+  func setupServiceCalls() {
+    let paginator = self.nextPage
+      .flatMapLatest { [weak self] _ -> Observable<Int> in
+        guard let strongSelf = self else { return .just(1) }
+        strongSelf.page += 1
+        return .just(strongSelf.page)
+      }
+
+    let moviesObservable = paginator
+      .distinctUntilChanged()
+      .flatMap { [weak self] page -> Observable<[MovieViewModel]> in
+        guard let strongSelf = self else { return .just([]) }
+        return strongSelf.loadMovies(from: page)
+    }
+    
+    moviesObservable.bind(to: dataSource).disposed(by: disposeBag)
   }
   
-  func nextPage() {
+  func loadMovies(from page: Int) -> Observable<[MovieViewModel]> {
     isLoading.onNext(true)
     
     let fetchMovies = service.fetchMovies(from: page)
-    let genres = service.genres()
-      .do(onSuccess: { [weak self] genres in
-        self?.cachedGenres.value.append(contentsOf: genres)
-      })
+      .asObservable().debounce(1, scheduler: MainScheduler.asyncInstance)
+    let genres = service.genres().asObservable()
     
-    Single.zip(fetchMovies, genres) { ($0, $1) }
+    return Observable.zip(fetchMovies, genres) { ($0, $1) }
+      .filter { page <= $0.0.totalPages }
       .map { (movies, genres) -> [MovieViewModel] in
-        return movies.map { movie -> MovieViewModel in
+        return movies.results.map { movie -> MovieViewModel in
           let movieGenres = movie.genreIds?.map { id -> Genre? in
             return genres.first(where: { $0.id == id })
             }.compactMap { $0 }
@@ -52,15 +74,13 @@ final class MoviesViewModel {
                                 releaseYear: movie.releaseDate,
                                 genres: movieGenres)
         }
-      }
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe(onSuccess: { [unowned self] movies in
-        self.dataSource.value.append(contentsOf: movies)
-        self.page += 1
-        self.isLoading.onNext(false)
-      }, onError: { [unowned self] error in
-        self.isLoading.onNext(false)
-        self.errorMessage.onNext(error.localizedDescription)
-      }).disposed(by: disposeBag)
+      }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewModel] in
+        return currentMovies + newMovies
+      }.do(onNext: { [weak self] _ in
+        self?.isLoading.onNext(false)
+        }, onError: { [weak self] error in
+          self?.isLoading.onNext(false)
+          self?.errorMessage.onNext(error.localizedDescription)
+      })
   }
 }

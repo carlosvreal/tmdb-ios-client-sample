@@ -46,6 +46,8 @@
 		67A0B5302115ED3400C8C82C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B52F2115ED3400C8C82C /* Settings.swift */; };
 		67A0B539211636D200C8C82C /* DictionaryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B538211636D200C8C82C /* DictionaryExtension.swift */; };
 		67A0B53D2116399900C8C82C /* MoviesAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A0B53C2116399900C8C82C /* MoviesAPITest.swift */; };
+		67E805692117B75600C9C795 /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E805682117B75600C9C795 /* UITableViewExtension.swift */; };
+		67E8056C2117BC9E00C9C795 /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E8056B2117BC9E00C9C795 /* CellIdentifier.swift */; };
 		7BE2229B6CBD0DD91A07B04C /* Pods_MobileDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */; };
 		A27FA5784BD720E9A51FBADC /* Pods_MobileDBTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 241728D2E0E19A67978BC526 /* Pods_MobileDBTests.framework */; };
 /* End PBXBuildFile section */
@@ -109,6 +111,8 @@
 		67A0B52F2115ED3400C8C82C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		67A0B538211636D200C8C82C /* DictionaryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtension.swift; sourceTree = "<group>"; };
 		67A0B53C2116399900C8C82C /* MoviesAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesAPITest.swift; sourceTree = "<group>"; };
+		67E805682117B75600C9C795 /* UITableViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
+		67E8056B2117BC9E00C9C795 /* CellIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellIdentifier.swift; sourceTree = "<group>"; };
 		D848CC9DA61A66EF583059D1 /* Pods-MobileDBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDBTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDBTests/Pods-MobileDBTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -305,6 +309,7 @@
 				67A0B52F2115ED3400C8C82C /* Settings.swift */,
 				67A0B537211636BC00C8C82C /* Extensions */,
 				674641A721171F8700FD5183 /* DeviceSize.swift */,
+				67E8056B2117BC9E00C9C795 /* CellIdentifier.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -314,6 +319,7 @@
 			children = (
 				67A0B538211636D200C8C82C /* DictionaryExtension.swift */,
 				674641992116992A00FD5183 /* URLSessionExtension.swift */,
+				67E805682117B75600C9C795 /* UITableViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -559,10 +565,12 @@
 				67464196211698D900FD5183 /* Movie.swift in Sources */,
 				6746418F2116971500FD5183 /* ServiceProviderProtocol.swift in Sources */,
 				67A0B52E2115E2DC00C8C82C /* MoviesAPI.swift in Sources */,
+				67E805692117B75600C9C795 /* UITableViewExtension.swift in Sources */,
 				67A0B5272115E17900C8C82C /* RequestableAPI.swift in Sources */,
 				674641A821171F8700FD5183 /* DeviceSize.swift in Sources */,
 				674641932116984100FD5183 /* ServiceError.swift in Sources */,
 				674641A42116A72000FD5183 /* ConfigServiceProvider.swift in Sources */,
+				67E8056C2117BC9E00C9C795 /* CellIdentifier.swift in Sources */,
 				67A0B539211636D200C8C82C /* DictionaryExtension.swift in Sources */,
 				675276A621114645001FB501 /* AppDelegate.swift in Sources */,
 				6746419C21169B2800FD5183 /* MoviesServiceProvider.swift in Sources */,

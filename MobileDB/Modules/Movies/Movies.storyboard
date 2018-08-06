@@ -17,6 +17,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ZWW-qz-IQ7">
+                                <rect key="frame" x="0.0" y="74" width="375" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="xPs-es-mBY"/>
+                                </constraints>
+                                <color key="color" red="0.31676603619999999" green="0.31676603619999999" blue="0.31676603619999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NLE-qx-QJx">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -24,15 +31,24 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="ZWW-qz-IQ7" firstAttribute="leading" secondItem="baC-se-poh" secondAttribute="leading" id="Gz1-Lx-SUl"/>
                             <constraint firstItem="NLE-qx-QJx" firstAttribute="leading" secondItem="baC-se-poh" secondAttribute="leading" id="QHe-mc-tNb"/>
                             <constraint firstItem="baC-se-poh" firstAttribute="trailing" secondItem="NLE-qx-QJx" secondAttribute="trailing" id="Qjs-vm-6HT"/>
                             <constraint firstItem="NLE-qx-QJx" firstAttribute="top" secondItem="baC-se-poh" secondAttribute="top" id="SWe-K5-jrz"/>
                             <constraint firstItem="baC-se-poh" firstAttribute="bottom" secondItem="NLE-qx-QJx" secondAttribute="bottom" id="gzd-zA-ZIO"/>
+                            <constraint firstItem="ZWW-qz-IQ7" firstAttribute="top" secondItem="baC-se-poh" secondAttribute="top" constant="10" id="h0X-3l-IH7"/>
+                            <constraint firstItem="ZWW-qz-IQ7" firstAttribute="trailing" secondItem="baC-se-poh" secondAttribute="trailing" id="n3P-XD-iNC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="baC-se-poh"/>
                     </view>
-                    <navigationItem key="navigationItem" id="5ge-Sj-m8q"/>
+                    <navigationItem key="navigationItem" id="5ge-Sj-m8q">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="cb5-8y-b0g">
+                            <color key="tintColor" red="0.25490196079999999" green="0.25098039220000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="loadingIndicator" destination="ZWW-qz-IQ7" id="yKa-sR-6Xc"/>
+                        <outlet property="refreshMovies" destination="cb5-8y-b0g" id="UVp-VO-uSn"/>
                         <outlet property="tableView" destination="NLE-qx-QJx" id="Z5x-EX-ziD"/>
                     </connections>
                 </viewController>

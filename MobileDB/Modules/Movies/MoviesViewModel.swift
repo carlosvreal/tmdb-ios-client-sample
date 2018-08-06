@@ -13,11 +13,12 @@ final class MoviesViewModel {
   var moviesDataSource: Driver<[MovieViewModel]> {
     return dataSource.asDriver()
   }
-    
-  let dataSource = BehaviorRelay<[MovieViewModel]>(value: [])
+
+  let dataSource = Variable<[MovieViewModel]>([])
+  let refresh = PublishSubject<Void>()
   let nextPage = PublishSubject<Void>()
   let errorMessage = PublishSubject<String>()
-  let isLoading = PublishSubject<Bool>()
+  let isLoadingData = PublishSubject<Bool>()
   private var page = 0
   private let service: MoviesServiceProtocol
   private let disposeBag: DisposeBag
@@ -36,6 +37,17 @@ final class MoviesViewModel {
 // MARK: Setup observables
 private extension MoviesViewModel {
   func setupServiceCalls() {
+    // Refresh
+    refresh
+      .flatMap { [weak self] page -> Observable<[MovieViewModel]> in
+        guard let strongSelf = self else { return .just([]) }
+        strongSelf.dataSource.value.removeAll()
+        strongSelf.page = 1
+        return strongSelf.loadMovies(from: strongSelf.page)
+      }.bind(to: dataSource)
+      .disposed(by: disposeBag)
+    
+    // Pagination
     let paginator = self.nextPage
       .flatMapLatest { [weak self] _ -> Observable<Int> in
         guard let strongSelf = self else { return .just(1) }
@@ -54,7 +66,7 @@ private extension MoviesViewModel {
   }
   
   func loadMovies(from page: Int) -> Observable<[MovieViewModel]> {
-    isLoading.onNext(true)
+    isLoadingData.onNext(true)
     
     let fetchMovies = service.fetchMovies(from: page)
       .asObservable().debounce(1, scheduler: MainScheduler.asyncInstance)
@@ -77,9 +89,9 @@ private extension MoviesViewModel {
       }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewModel] in
         return currentMovies + newMovies
       }.do(onNext: { [weak self] _ in
-        self?.isLoading.onNext(false)
+        self?.isLoadingData.onNext(false)
         }, onError: { [weak self] error in
-          self?.isLoading.onNext(false)
+          self?.isLoadingData.onNext(false)
           self?.errorMessage.onNext(error.localizedDescription)
       })
   }

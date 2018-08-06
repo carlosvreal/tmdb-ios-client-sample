@@ -12,6 +12,8 @@ import RxDataSources
 
 final class MoviesViewController: UIViewController {
   @IBOutlet private weak var tableView: UITableView!
+  @IBOutlet private weak var refreshMovies: UIBarButtonItem!
+  @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
   
   private let disposeBag = DisposeBag()
   private let viewModel = MoviesViewModel()
@@ -25,11 +27,15 @@ final class MoviesViewController: UIViewController {
   }
   
   private func setupOutletsBinds() {
+    // TableView
     viewModel.moviesDataSource.asObservable()
       .bind(to: tableView.rx.items(cellIdentifier: MovieViewCell.identifier,
                                    cellType: MovieViewCell.self)) {(_, movieViewModel, cell) in
         cell.viewModel.setupData(with: movieViewModel)
       }.disposed(by: disposeBag)
+    
+    viewModel.moviesDataSource.map { !($0.count > 0) }
+      .drive(tableView.rx.isHidden).disposed(by: disposeBag)
     
     // Triggers next page
     tableView.rx.willDisplayCell
@@ -43,10 +49,19 @@ final class MoviesViewController: UIViewController {
       }).disposed(by: disposeBag)
     
     tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
-        guard let cell = cell as? MovieViewCell else { return }
-        
-        cell.viewModel.loadImage()
-      }).subscribe()
+      guard let cell = cell as? MovieViewCell else { return }
+      
+      cell.viewModel.loadImage()
+    }).subscribe()
       .disposed(by: disposeBag)
+    
+    // Loading indicator
+    viewModel.isLoadingData
+      .bind(to: loadingIndicator.rx.isHidden).disposed(by: disposeBag)
+    viewModel.isLoadingData
+      .bind(to: loadingIndicator.rx.isAnimating).disposed(by: disposeBag)
+    
+    // Refresh tap action
+    refreshMovies.rx.tap.asDriver().drive(viewModel.refresh).disposed(by: disposeBag)
   }
 }

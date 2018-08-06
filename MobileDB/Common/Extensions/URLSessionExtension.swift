@@ -12,7 +12,7 @@ extension URLSession: SessionHandler {
   func executeRequest(with requestType: RequestableAPI,
                       completion: @escaping SessionHandler.Completion) {
     guard let urlRequest = requestType.urlRequest else {
-      completion(.error(.invalidParameters(message: "Invalid parameters")))
+      assertionFailure("Invalid parameters request")
       return
     }
     

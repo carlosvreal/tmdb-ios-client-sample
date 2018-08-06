@@ -25,8 +25,10 @@ final class MoviesViewController: UIViewController {
     
     setupOutletsBinds()
   }
-  
-  private func setupOutletsBinds() {
+}
+
+private extension MoviesViewController {
+  func setupOutletsBinds() {
     // TableView
     viewModel.moviesDataSource.asObservable()
       .bind(to: tableView.rx.items(cellIdentifier: MovieViewCell.identifier,
@@ -63,5 +65,31 @@ final class MoviesViewController: UIViewController {
     
     // Refresh tap action
     refreshMovies.rx.tap.asDriver().drive(viewModel.refresh).disposed(by: disposeBag)
+    
+    // Present MovieDetail
+    tableView.rx.modelSelected(MovieDetailModel.self)
+      .subscribe(onNext: { [weak self] model in
+        guard let id = model.id else { return }
+        self?.viewModel.loadMovieId.onNext("\(id)")
+      }).disposed(by: disposeBag)
+    
+    viewModel.movieDetail
+      .observeOn(MainScheduler.asyncInstance)
+      .subscribe(onNext: { [weak self] model in
+      self?.presentMovieDetail(with: model)
+    }).disposed(by: disposeBag)
+  }
+  
+  func presentMovieDetail(with model: MovieDetailModel) {
+    let identifier = MovieDetailsViewController.identifier
+    guard let viewController = Storyboard.movieDetail.viewController(identifier) as? MovieDetailsViewController else {
+      assertionFailure("MoviesViewController ViewController not found")
+      return
+    }
+    
+    let viewModel = MovieDetailsViewModel(model: model)
+    viewController.viewModel = viewModel
+    
+    navigationController?.pushViewController(viewController, animated: true)
   }
 }

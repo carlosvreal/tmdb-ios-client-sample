@@ -9,7 +9,7 @@
 import RxSwift
 import RxCocoa
 
-class MovieDetailsViewController: UIViewController {
+class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   @IBOutlet private weak var backdropImageView: UIImageView!
   @IBOutlet private weak var titleMovie: UILabel!
   @IBOutlet private weak var releaseYear: UILabel!
@@ -19,6 +19,7 @@ class MovieDetailsViewController: UIViewController {
   @IBOutlet private weak var descriptionMovie: UILabel!
   @IBOutlet private weak var genres: UILabel!
   @IBOutlet private weak var revenue: UILabel!
+  @IBOutlet private weak var homepageButton: UIButton!
   
   var viewModel: MovieDetailsViewModel?
   private let disposeBag = DisposeBag()
@@ -38,6 +39,9 @@ class MovieDetailsViewController: UIViewController {
     viewModel?.descriptionMovie.bind(to: descriptionMovie.rx.text).disposed(by: disposeBag)
     viewModel?.genres.bind(to: genres.rx.text).disposed(by: disposeBag)
     viewModel?.revenue.bind(to: revenue.rx.text).disposed(by: disposeBag)
+    viewModel?.ratingScore.bind(to: ratingScore.rx.text).disposed(by: disposeBag)
+    viewModel?.homepage.bind(to: homepageButton.rx.title(for: .normal)).disposed(by: disposeBag)
+    viewModel?.homepage.map { !$0.isEmpty }.bind(to: homepageButton.rx.isHidden).disposed(by: disposeBag)
     
     viewModel?.setupData()
   }

@@ -16,6 +16,28 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
     self.session = session
   }
   
+  func fetchMovieDetail(with identifier: String) -> Single<Movie> {
+    let requestType = MoviesAPI.movie(id: identifier)
+    
+    return Single.create { [weak self] single in
+      self?.session.executeRequest(with: requestType) { result in
+        switch result {
+        case .success(let data):
+          do {
+            let decodedData = try JSONDecoder().decode(Movie.self, from: data)
+            single(.success(decodedData))
+          } catch {
+            single(.error(ServiceError.invalidFormatData))
+          }
+        case .error(let error):
+          single(.error(error))
+        }
+      }
+      
+      return Disposables.create()
+    }
+  }
+  
   func fetchMovies(from page: Int) -> Single<Movies> {
     let requestType = MoviesAPI.movies(page: page)
     

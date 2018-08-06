@@ -11,14 +11,15 @@ import RxCocoa
 
 final class MovieDetailsViewModel {
   let backdropImage = PublishSubject<UIImage>()
-  let titleMovie = PublishSubject<String>()
-  let releaseYear = PublishSubject<String>()
-  let runtime = PublishSubject<String>()
-  let language = PublishSubject<String>()
-  let ratingScore = PublishSubject<String>()
-  let descriptionMovie = PublishSubject<String>()
-  let genres = PublishSubject<String>()
-  let revenue = PublishSubject<String>()
+  let titleMovie = BehaviorSubject<String>(value: "")
+  let releaseYear = BehaviorSubject<String>(value: "")
+  let runtime = BehaviorSubject<String>(value: "")
+  let language = BehaviorSubject<String>(value: "")
+  let ratingScore = BehaviorSubject<String>(value: "")
+  let descriptionMovie = BehaviorSubject<String>(value: "")
+  let genres = BehaviorSubject<String>(value: "")
+  let revenue = BehaviorSubject<String>(value: "")
+  let homepage = BehaviorSubject<String>(value: "")
 
   private let model: MovieDetailModel
   private let service: ConfigServiceProtocol
@@ -66,6 +67,10 @@ final class MovieDetailsViewModel {
       self.revenue.onNext(formattedRevenue)
     }
     
+    if let homepage = model.homepageLink {
+      self.homepage.onNext(homepage)
+    }
+    
     setupLoadBackdropImage()
   }
 }
@@ -82,12 +87,12 @@ private extension MovieDetailsViewModel {
       })
   }
   
-  func formatTime(_ time: Double) -> String {
-    guard time > 3600 else {
-      return "\(Int(time / 60))m"
+  func formatTime(_ movieRuntime: Double) -> String {
+    guard movieRuntime > 60 else {
+      return "\(Int(movieRuntime))m"
     }
-    
-    let totalHours = time / 3600
+
+    let totalHours = movieRuntime / 60
     let minutes = totalHours.truncatingRemainder(dividingBy: 1) * 60
     return "\(Int(totalHours))h \(Int(minutes))m"
   }

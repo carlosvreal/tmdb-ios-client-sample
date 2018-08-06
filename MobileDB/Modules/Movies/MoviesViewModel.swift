@@ -14,7 +14,7 @@ final class MoviesViewModel {
     return dataSource.asDriver()
   }
     
-  let dataSource = Variable<[MovieViewModel]>([])
+  let dataSource = BehaviorRelay<[MovieViewModel]>(value: [])
   let nextPage = PublishSubject<Void>()
   let errorMessage = PublishSubject<String>()
   let isLoading = PublishSubject<Bool>()

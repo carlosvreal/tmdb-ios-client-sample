@@ -26,7 +26,11 @@ final class MovieViewCellViewModel {
     self.model = model
     
     title.onNext(model.title)
-    releaseYear.onNext(model.releaseYear)
+    
+    if let releaseYear = model.releaseYear,
+      let year = releaseYear.split(separator: "-").first {
+      self.releaseYear.onNext(String(year))
+    }
     
     if let ratingScore = model.ratingScore {
       let rating = String(format: "%.1f", ratingScore)

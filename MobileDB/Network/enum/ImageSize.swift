@@ -23,12 +23,12 @@ struct PosterImage {
     switch UIDevice.current.userInterfaceIdiom {
     case .phone:
       if Device.isIPhone8PlusOrX {
-        return .w780
+        return .w500
       } else if Device.isIPhoneSE {
-        return .w342
+        return .w92
       }
       
-      return .w500
+      return .w342
     case .pad:
       return .w780
     default:

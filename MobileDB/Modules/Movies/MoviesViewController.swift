@@ -22,8 +22,15 @@ final class MoviesViewController: UIViewController {
     super.viewDidLoad()
     
     tableView.register(MovieViewCell.self)
-    
     setupOutletsBinds()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: indexPathForSelectedRow, animated: true)
+    }
   }
 }
 
@@ -58,7 +65,7 @@ private extension MoviesViewController {
       .disposed(by: disposeBag)
     
     // Loading indicator
-    viewModel.isLoadingData
+    viewModel.isLoadingData.map { !$0 }
       .bind(to: loadingIndicator.rx.isHidden).disposed(by: disposeBag)
     viewModel.isLoadingData
       .bind(to: loadingIndicator.rx.isAnimating).disposed(by: disposeBag)

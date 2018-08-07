@@ -8,7 +8,7 @@
 
 import RxSwift
 
-class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
+final class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtocol {
   let session: SessionHandler
   
   required init(session: SessionHandler = URLSession.shared) {

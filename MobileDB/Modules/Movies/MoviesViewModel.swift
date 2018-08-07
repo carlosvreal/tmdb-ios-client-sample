@@ -40,7 +40,6 @@ final class MoviesViewModel {
 // MARK: Setup observables
 private extension MoviesViewModel {
   func setupServiceCalls() {
-    
     // Load movie detail
     loadMovieId
       .flatMap { [weak self] id -> Observable<MovieDetailModel> in
@@ -78,6 +77,7 @@ private extension MoviesViewModel {
   }
   
   func loadMovieDetail(with identifier: String) -> Observable<MovieDetailModel> {
+    isLoadingData.onNext(true)
     return service.fetchMovieDetail(with: identifier).asObservable()
       .map { movie -> MovieDetailModel in
         return MovieDetailModel(id: movie.id,
@@ -92,7 +92,12 @@ private extension MoviesViewModel {
                                 runtime: movie.runtime,
                                 language: movie.spokenLanguage?.first?.name,
                                 homepageLink: movie.homepage)
-    }
+      }.do(onNext: { [weak self] _ in
+        self?.isLoadingData.onNext(false)
+      }, onError: { [weak self] error in
+        self?.isLoadingData.onNext(false)
+        self?.errorMessage.onNext(error.localizedDescription)
+      })
   }
   
   func loadMovies(from page: Int) -> Observable<[MovieDetailModel]> {

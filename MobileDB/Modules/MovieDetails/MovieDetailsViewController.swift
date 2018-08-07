@@ -9,7 +9,7 @@
 import RxSwift
 import RxCocoa
 
-class MovieDetailsViewController: UIViewController, ReusableIdentifier {
+final class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   @IBOutlet private weak var backdropImageView: UIImageView!
   @IBOutlet private weak var titleMovie: UILabel!
   @IBOutlet private weak var releaseYear: UILabel!
@@ -20,6 +20,7 @@ class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   @IBOutlet private weak var genres: UILabel!
   @IBOutlet private weak var revenue: UILabel!
   @IBOutlet private weak var homepageButton: UIButton!
+  @IBOutlet private weak var homepageLabel: UIView!
   
   var viewModel: MovieDetailsViewModel?
   private let disposeBag = DisposeBag()
@@ -40,9 +41,19 @@ class MovieDetailsViewController: UIViewController, ReusableIdentifier {
     viewModel?.genres.bind(to: genres.rx.text).disposed(by: disposeBag)
     viewModel?.revenue.bind(to: revenue.rx.text).disposed(by: disposeBag)
     viewModel?.ratingScore.bind(to: ratingScore.rx.text).disposed(by: disposeBag)
-    viewModel?.homepage.bind(to: homepageButton.rx.title(for: .normal)).disposed(by: disposeBag)
-    viewModel?.homepage.map { !$0.isEmpty }.bind(to: homepageButton.rx.isHidden).disposed(by: disposeBag)
+    viewModel?.homepage.map { !$0.isEmpty ? $0 : "-" }
+      .bind(to: homepageButton.rx.title(for: .normal)).disposed(by: disposeBag)
     
+    homepageButton.rx.tap.subscribe(onNext: { [weak self] in
+      guard let linkUrl = self?.homepageButton.titleLabel?.text else { return }
+      self?.openHomepage(with: linkUrl)
+    }).disposed(by: disposeBag)
     viewModel?.setupData()
+  }
+  
+  func openHomepage(with link: String) {
+    guard let url = URL(string: link) else { return }
+    
+    UIApplication.shared.open(url, options: [:], completionHandler: nil)
   }
 }

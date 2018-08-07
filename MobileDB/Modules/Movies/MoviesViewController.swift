@@ -114,7 +114,7 @@ private extension MoviesViewController {
     refreshMovies.rx.tap.asDriver().drive(viewModel.refresh).disposed(by: disposeBag)
     
     // Present MovieDetail
-    tableView.rx.modelSelected(MovieDetailModel.self)
+    tableView.rx.modelSelected(MovieViewData.self)
       .subscribe(onNext: { [weak self] model in
         guard let id = model.id else { return }
         self?.viewModel.willSearchMovieDetail.onNext("\(id)")
@@ -127,7 +127,7 @@ private extension MoviesViewController {
     }).disposed(by: disposeBag)
   }
   
-  func presentMovieDetail(with model: MovieDetailModel) {
+  func presentMovieDetail(with model: MovieViewData) {
     let identifier = MovieDetailsViewController.identifier
     guard let viewController = Storyboard.movieDetail.viewController(identifier) as? MovieDetailsViewController else {
       assertionFailure("MoviesViewController ViewController not found")

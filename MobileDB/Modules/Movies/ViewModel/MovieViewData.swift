@@ -1,5 +1,5 @@
 //
-//  MovieDetailModel.swift
+//  MovieViewData.swift
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/05/18.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct MovieDetailModel {
+// Model that represents data used by UI layer only
+struct MovieViewData {
   let id: Int?
   let title: String?
   let posterImagePath: String?

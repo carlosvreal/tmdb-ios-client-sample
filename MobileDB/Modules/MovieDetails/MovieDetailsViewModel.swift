@@ -21,11 +21,11 @@ final class MovieDetailsViewModel {
   let revenue = BehaviorSubject<String>(value: "")
   let homepage = BehaviorSubject<String>(value: "")
 
-  private let model: MovieDetailModel
+  private let model: MovieViewData
   private let service: ConfigServiceProtocol
   private let disposeBag = DisposeBag()
   
-  init(model: MovieDetailModel, service: ConfigServiceProtocol = ConfigServiceProvider()) {
+  init(model: MovieViewData, service: ConfigServiceProtocol = ConfigServiceProvider()) {
     self.model = model
     self.service = service
   }

@@ -1,5 +1,5 @@
 //
-//  MovieDetailModel.swift
+//  MovieViewCellViewModel.swift
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/05/18.
@@ -15,14 +15,14 @@ final class MovieViewCellViewModel {
   let posterImage = PublishSubject<UIImage>()
   let popularity = PublishSubject<String>()
   
-  private var model: MovieDetailModel?
+  private var model: MovieViewData?
   private let service: ConfigServiceProtocol
   
   init(service: ConfigServiceProtocol) {
     self.service = service
   }
   
-  func setupData(with model: MovieDetailModel) {
+  func setupData(with model: MovieViewData) {
     self.model = model
     
     if let title = model.title {
@@ -46,6 +46,7 @@ final class MovieViewCellViewModel {
   
   func loadPosterImage() {
     guard let model = model, let imagePath = model.posterImagePath else { return }
+    // Once the Single call receives a success or error the subscriber will disposed
     _ = service
       .loadPoster(for: imagePath)
       .observeOn(MainScheduler.asyncInstance)

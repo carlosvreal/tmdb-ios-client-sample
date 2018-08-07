@@ -54,5 +54,4 @@ playground.xcworkspace
 
 # merge files
 *.orig
-*.xcworkspacedata
 IDEWorkspaceChecks.plist

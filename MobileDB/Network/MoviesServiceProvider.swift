@@ -18,35 +18,26 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
   
   func fetchMovieDetail(with identifier: String) -> Single<Movie> {
     let requestType = MoviesAPI.movie(id: identifier)
-    
-    return Single.create { [weak self] single in
-      self?.session.executeRequest(with: requestType) { result in
-        switch result {
-        case .success(let data):
-          do {
-            let decodedData = try JSONDecoder().decode(Movie.self, from: data)
-            single(.success(decodedData))
-          } catch {
-            single(.error(ServiceError.invalidFormatData))
-          }
-        case .error(let error):
-          single(.error(error))
-        }
-      }
-      
-      return Disposables.create()
-    }
+    return execute(requestType: requestType)
   }
   
   func fetchMovies(from page: Int) -> Single<Movies> {
     let requestType = MoviesAPI.movies(page: page)
-    
+    return execute(requestType: requestType)
+  }
+  
+  func search(for query: String, page: Int) -> Single<Movies> {
+    let requestType = MoviesAPI.search(query: query, page: page)
+    return execute(requestType: requestType)
+  }
+  
+  private func execute<T>(requestType: RequestableAPI) -> Single<T> where T: Codable {
     return Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {
         case .success(let data):
           do {
-            let decodedData = try JSONDecoder().decode(Movies.self, from: data)
+            let decodedData = try JSONDecoder().decode(T.self, from: data)
             single(.success(decodedData))
           } catch {
             single(.error(ServiceError.invalidFormatData))
@@ -70,28 +61,6 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
           do {
             let decodedData = try JSONDecoder().decode(Genres.self, from: data)
             single(.success(decodedData.genres))
-          } catch {
-            single(.error(ServiceError.invalidFormatData))
-          }
-        case .error(let error):
-          single(.error(error))
-        }
-      }
-      
-      return Disposables.create()
-    }
-  }
-  
-  func search(for query: String, page: Int) -> Single<[Movie]> {
-    let requestType = MoviesAPI.search(query: query, page: page)
-    
-    return Single.create { [weak self] single in
-      self?.session.executeRequest(with: requestType) { result in
-        switch result {
-        case .success(let data):
-          do {
-            let decodedData = try JSONDecoder().decode(Movies.self, from: data)
-            single(.success(decodedData.results))
           } catch {
             single(.error(ServiceError.invalidFormatData))
           }

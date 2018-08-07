@@ -17,7 +17,7 @@ protocol ServiceProviderProtocol {
 protocol MoviesServiceProtocol {
   func fetchMovies(from page: Int) -> Single<Movies>
   func genres() -> Single<[Genre]>
-  func search(for query: String, page: Int) -> Single<[Movie]>
+  func search(for query: String, page: Int) -> Single<Movies>
   func fetchMovieDetail(with identifier: String) -> Single<Movie>
 }
 

@@ -12,6 +12,7 @@ import RxCocoa
 private struct MoviesViewModelConstants {
   static let messageEmptySearch = "No movies found"
   static let invalidMovieId = "Invalid Movie id"
+  static let requestFailed = "Something went wrong. Please try again"
 }
 
 final class MoviesViewModel {
@@ -41,26 +42,9 @@ final class MoviesViewModel {
     self.disposeBag = DisposeBag()
     
     setupServiceCalls()
-    setupSearch()
     
-    // load the fist page
+    // Load first page
     nextPage.onNext(())
-  }
-}
-
-// MARK: Setup Search bind
-private extension MoviesViewModel {
-  func setupSearch() {
-    
-  }
-  
-  func searchMovies(query: String, from page: Int) -> Observable<[MovieDetailModel]> {
-    isLoadingData.onNext(true)
-    
-    let searchMovies = service.search(for: query, page: page).asObservable()
-    let genres = service.genres().asObservable()
-    
-    return loadMovies(searchMovies, genres: genres)
   }
 }
 
@@ -69,44 +53,40 @@ private extension MoviesViewModel {
   func setupServiceCalls() {
     // Refresh
     refresh
-      .flatMap { [weak self] page -> Observable<[MovieDetailModel]> in
-        guard let strongSelf = self else { return .just([]) }
-        strongSelf.dataSource.value.removeAll()
-        strongSelf.page.value = 1
-        return strongSelf.loadMovies(from: strongSelf.page.value)
+      .flatMap { [unowned self] page -> Observable<[MovieDetailModel]> in
+        self.dataSource.value.removeAll()
+        self.page.value = 1
+        return self.loadMovies(from: self.page.value)
       }.bind(to: dataSource)
       .disposed(by: disposeBag)
     
     // Cancel search
-    willCancelSearch.subscribe(onNext: { [weak self] _ in
-      self?.refresh.onNext(())
+    willCancelSearch.subscribe(onNext: { [unowned self] _ in
+      self.refresh.onNext(())
     }).disposed(by: disposeBag)
     
-    willCleanSearchResult.subscribe(onNext: { [weak self] in
-      guard let strongSelf = self else { return }
-      strongSelf.dataSource.value.removeAll()
-      strongSelf.page.value = 1
-    }).disposed(by: disposeBag)
-    
+    willCleanSearchResult.observeOn(MainScheduler.asyncInstance)
+      .subscribe(onNext: { [unowned self] in
+        self.dataSource.value.removeAll()
+        self.page.value = 1
+      }).disposed(by: disposeBag)
+
     // Load movie detail
     willSearchMovieDetail
-      .flatMap { [weak self] id -> Observable<MovieDetailModel> in
-        guard let strongSelf = self else {
-          return .error(ServiceError.invalidParameters(message: MoviesViewModelConstants.invalidMovieId))
-        }
-        return strongSelf.loadMovieDetail(with: id)
+      .flatMap { [unowned self] id -> Observable<MovieDetailModel> in
+        return self.loadMovieDetail(with: id)
       }.bind(to: didReceiveMovieDetail)
       .disposed(by: disposeBag)
     
     // Pagination
-    let paginator = self.nextPage
+    let paginator = nextPage
       .withLatestFrom(page.asObservable())
       .scan(page.value, accumulator: { (accumulated, _) -> Int in
         return accumulated + 1
       }).do(onNext: { [weak self] page in
         guard let strongSelf = self else { return }
         strongSelf.page.value = page
-      }).share(replay: 1)
+      })
     
     // fetch movies
     let moviesObservable = paginator
@@ -117,15 +97,17 @@ private extension MoviesViewModel {
     }
     
     //serach movies
-    let serachObservable = Observable.zip(searchMovie, paginator) { ($0, $1) }
+    let serachObservable = Observable.combineLatest(searchMovie, paginator) { ($0, $1) }
       .skipWhile { $0.0.isEmpty }
       .flatMap { [weak self] (query, page) -> Observable<[MovieDetailModel]> in
         guard let strongSelf = self else { return .just([]) }
         return strongSelf.searchMovies(query: query, from: page)
       }
     
-    moviesObservable.bind(to: dataSource).disposed(by: disposeBag)
-    serachObservable.bind(to: dataSource).disposed(by: disposeBag)
+    moviesObservable.observeOn(MainScheduler.asyncInstance)
+      .bind(to: dataSource).disposed(by: disposeBag)
+    serachObservable.observeOn(MainScheduler.asyncInstance)
+      .bind(to: dataSource).disposed(by: disposeBag)
   }
   
   func loadMovieDetail(with identifier: String) -> Observable<MovieDetailModel> {
@@ -154,6 +136,18 @@ private extension MoviesViewModel {
   }
 }
 
+// MARK: Setup Search bind
+private extension MoviesViewModel {
+  func searchMovies(query: String, from page: Int) -> Observable<[MovieDetailModel]> {
+    isLoadingData.onNext(true)
+    
+    let searchMovies = service.search(for: query, page: page).asObservable()
+    let genres = service.genres().asObservable()
+    
+    return loadMovies(searchMovies, genres: genres)
+  }
+}
+
 // MARK: Load movies
 private extension MoviesViewModel {
   func loadMovies(_ movies: Observable<Movies>, genres: Observable<[Genre]>) -> Observable<[MovieDetailModel]> {
@@ -168,9 +162,9 @@ private extension MoviesViewModel {
         return currentMovies + newMovies
       }.do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
-        }, onError: { [weak self] error in
+        }, onError: { [weak self] _ in
           self?.isLoadingData.onNext(false)
-          self?.errorMessage.onNext(error.localizedDescription)
+          self?.errorMessage.onNext(MoviesViewModelConstants.requestFailed)
       })
   }
 }

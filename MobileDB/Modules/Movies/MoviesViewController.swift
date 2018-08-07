@@ -51,12 +51,19 @@ private extension MoviesViewController {
     searchController.rx.didPresent
       .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
     
-    searchController.searchBar.rx.text.orEmpty
+    let searchQueryObservable = searchController.searchBar.rx.text.orEmpty
       .debounce(0.5, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
+   
+    searchQueryObservable
       .filter { !$0.isEmpty }
       .bind(to: viewModel.searchMovie).disposed(by: disposeBag)
     
+    searchQueryObservable
+      .filter { $0.isEmpty }
+      .map { _ in }
+      .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
+
     searchController.searchBar.rx.cancelButtonClicked.debug()
       .bind(to: viewModel.willCancelSearch)
       .disposed(by: disposeBag)

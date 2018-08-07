@@ -30,8 +30,7 @@ final class MoviesViewModel {
   let searchMovie = PublishSubject<String>()
   let willCleanSearchResult = PublishSubject<Void>()
   let willCancelSearch = PublishSubject<Void>()
-  let emptyStateMessage = PublishSubject<String>()
-  
+
   private let page = Variable(0)
   private let service: MoviesServiceProtocol
   private let disposeBag: DisposeBag
@@ -43,6 +42,9 @@ final class MoviesViewModel {
     
     setupServiceCalls()
     
+   }
+  
+  func loadMoviesList() {
     // Load first page
     nextPage.onNext(())
   }
@@ -65,7 +67,7 @@ private extension MoviesViewModel {
       self.refresh.onNext(())
     }).disposed(by: disposeBag)
     
-    willCleanSearchResult.observeOn(MainScheduler.asyncInstance)
+    willCleanSearchResult.skip(1)
       .subscribe(onNext: { [unowned self] in
         self.dataSource.value.removeAll()
         self.page.value = 1
@@ -97,7 +99,7 @@ private extension MoviesViewModel {
     }
     
     //serach movies
-    let serachObservable = Observable.combineLatest(searchMovie, paginator) { ($0, $1) }
+    let serachObservable = Observable.combineLatest(searchMovie, Observable.just(1)) { ($0, $1) }
       .skipWhile { $0.0.isEmpty }
       .flatMap { [weak self] (query, page) -> Observable<[MovieViewData]> in
         guard let strongSelf = self else { return .just([]) }
@@ -114,7 +116,7 @@ private extension MoviesViewModel {
     isLoadingData.onNext(true)
     return service.fetchMovieDetail(with: identifier).asObservable()
       .map { [weak self] movie -> MovieViewData? in
-        return self?.mapMovieToMovieDetail(movie: movie,
+        return self?.mapMovieToMovieViewData(movie: movie,
                                            genres: movie.genres,
                                            language: movie.spokenLanguage?.first?.name)
       }.flatMap { Observable.from(optional: $0) }
@@ -127,8 +129,6 @@ private extension MoviesViewModel {
   }
   
   func loadMovies(from page: Int) -> Observable<[MovieViewData]> {
-    isLoadingData.onNext(true)
-    
     let fetchMovies = service.fetchMovies(from: page).asObservable()
     let genres = service.genres().asObservable()
     
@@ -139,8 +139,6 @@ private extension MoviesViewModel {
 // MARK: Setup Search bind
 private extension MoviesViewModel {
   func searchMovies(query: String, from page: Int) -> Observable<[MovieViewData]> {
-    isLoadingData.onNext(true)
-    
     let searchMovies = service.search(for: query, page: page).asObservable()
     let genres = service.genres().asObservable()
     
@@ -151,13 +149,13 @@ private extension MoviesViewModel {
 // MARK: Load movies
 private extension MoviesViewModel {
   func loadMovies(_ movies: Observable<Movies>, genres: Observable<[Genre]>) -> Observable<[MovieViewData]> {
-
     isLoadingData.onNext(true)
+    
     return Observable.zip(movies, genres) { ($0, $1) }
       .filter { self.page.value <= $0.0.totalPages }
       .map { [weak self] (movies, genres) -> [MovieViewData] in
         guard let strongSelf = self else { return [] }
-        return strongSelf.mapMoviesGenresToMovieDetail(movies: movies, genres: genres)
+        return strongSelf.mapMoviesGenresToMovieViewData(movies: movies, genres: genres)
       }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewData] in
         return currentMovies + newMovies
       }.do(onNext: { [weak self] _ in
@@ -171,19 +169,19 @@ private extension MoviesViewModel {
 
 // MARK: Utility map methods
 private extension MoviesViewModel {
-  func mapMoviesGenresToMovieDetail(movies: Movies, genres: [Genre]) -> [MovieViewData] {
+  func mapMoviesGenresToMovieViewData(movies: Movies, genres: [Genre]) -> [MovieViewData] {
     return movies.results.map { [weak self] movie -> MovieViewData? in
       let movieGenres = movie.genreIds?.map { id -> Genre? in
         return genres.first(where: { $0.id == id })
         }.compactMap { $0 }
       
-      return self?.mapMovieToMovieDetail(movie: movie,
+      return self?.mapMovieToMovieViewData(movie: movie,
                                          genres: movieGenres,
                                          language: movie.language)
       }.compactMap { $0 }
   }
   
-  func mapMovieToMovieDetail(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
+  func mapMovieToMovieViewData(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
     return MovieViewData(id: movie.id,
                             title: movie.title,
                             posterImagePath: movie.poster,

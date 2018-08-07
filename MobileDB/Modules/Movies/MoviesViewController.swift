@@ -26,6 +26,8 @@ final class MoviesViewController: UIViewController {
     tableView.register(MovieViewCell.self)
     setupSearchBar()
     setupOutletsBinds()
+    
+    viewModel.loadMoviesList()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -64,13 +66,9 @@ private extension MoviesViewController {
       .map { _ in }
       .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
 
-    searchController.searchBar.rx.cancelButtonClicked.debug()
+    searchController.searchBar.rx.cancelButtonClicked
       .bind(to: viewModel.willCancelSearch)
       .disposed(by: disposeBag)
-    
-    viewModel.emptyStateMessage.bind(to: empyStateLabel.rx.text).disposed(by: disposeBag)
-    viewModel.emptyStateMessage.map { $0.isEmpty }
-      .bind(to: tableView.rx.isHidden).disposed(by: disposeBag)
   }
 }
 
@@ -89,8 +87,9 @@ private extension MoviesViewController {
     
     // Triggers next page
     tableView.rx.willDisplayCell
-      .map { (_, indexPath) -> Bool in
-        return indexPath.item == self.tableView.numberOfRows(inSection: 0) - 3
+      .map { [unowned self] (_, indexPath) -> Bool in
+        let numberOfCells = 3
+        return indexPath.item == self.tableView.numberOfRows(inSection: 0) - numberOfCells
       }
       .distinctUntilChanged()
       .filter { $0 == true }

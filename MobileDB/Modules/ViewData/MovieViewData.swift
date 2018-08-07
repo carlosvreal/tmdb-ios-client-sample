@@ -22,4 +22,5 @@ struct MovieViewData {
   let runtime: Int?
   let language: String?
   let homepageLink: String?
+  let popularity: Double
 }

@@ -34,6 +34,7 @@ final class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   private func setupUIBind() {
     viewModel?.backdropImage.bind(to: backdropImageView.rx.image).disposed(by: disposeBag)
     viewModel?.titleMovie.bind(to: titleMovie.rx.text).disposed(by: disposeBag)
+    viewModel?.titleMovie.bind(to: rx.title).disposed(by: disposeBag)
     viewModel?.releaseYear.bind(to: releaseYear.rx.text).disposed(by: disposeBag)
     viewModel?.runtime.bind(to: runtime.rx.text).disposed(by: disposeBag)
     viewModel?.language.bind(to: language.rx.text).disposed(by: disposeBag)

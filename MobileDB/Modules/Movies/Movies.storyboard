@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NLE-qx-QJx">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="116" width="375" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ZWW-qz-IQ7">
@@ -42,7 +42,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="baC-se-poh"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Movies" largeTitleDisplayMode="always" id="5ge-Sj-m8q">
+                    <navigationItem key="navigationItem" title="Movies" id="5ge-Sj-m8q">
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="cb5-8y-b0g">
                             <color key="tintColor" red="0.25490196079999999" green="0.25098039220000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
@@ -50,10 +50,19 @@
                     <connections>
                         <outlet property="loadingIndicator" destination="ZWW-qz-IQ7" id="yKa-sR-6Xc"/>
                         <outlet property="refreshMovies" destination="cb5-8y-b0g" id="UVp-VO-uSn"/>
+                        <outlet property="searchDisplayController" destination="dHn-N0-BRq" id="KZJ-RZ-mGR"/>
                         <outlet property="tableView" destination="NLE-qx-QJx" id="Z5x-EX-ziD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="meD-xR-iBb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="dHn-N0-BRq">
+                    <connections>
+                        <outlet property="delegate" destination="5xO-Fv-sQB" id="Y5E-68-Jo5"/>
+                        <outlet property="searchContentsController" destination="5xO-Fv-sQB" id="gYX-gE-OoX"/>
+                        <outlet property="searchResultsDataSource" destination="5xO-Fv-sQB" id="wmV-GU-4f5"/>
+                        <outlet property="searchResultsDelegate" destination="5xO-Fv-sQB" id="mO3-Up-61p"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="620" y="146.17691154422789"/>
         </scene>
@@ -62,9 +71,15 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0AM-Ih-wod" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yYr-Y1-ILI">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="yYr-Y1-ILI">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="0.31676603619999999" green="0.31676603619999999" blue="0.31676603619999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="25"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

@@ -163,12 +163,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6703E4422118D7A900811F90 /* ViewModel */ = {
+		6703E4422118D7A900811F90 /* ViewData */ = {
 			isa = PBXGroup;
 			children = (
 				67D0D05E2117A0E100A39B51 /* MovieViewData.swift */,
 			);
-			path = ViewModel;
+			path = ViewData;
 			sourceTree = "<group>";
 		};
 		67464194211698C100FD5183 /* Model */ = {
@@ -271,6 +271,7 @@
 		677898B121178C5000B7B532 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				6703E4422118D7A900811F90 /* ViewData */,
 				67E5BB232118A491003D3679 /* MovieDetails */,
 				677898B221178C5F00B7B532 /* Movies */,
 			);
@@ -280,7 +281,6 @@
 		677898B221178C5F00B7B532 /* Movies */ = {
 			isa = PBXGroup;
 			children = (
-				6703E4422118D7A900811F90 /* ViewModel */,
 				67D0D0572117980A00A39B51 /* Cell */,
 				677898B321178C7B00B7B532 /* Movies.storyboard */,
 				677898B721178CBE00B7B532 /* MoviesViewModel.swift */,

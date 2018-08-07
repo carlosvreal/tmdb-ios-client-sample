@@ -3,12 +3,15 @@ Movies TMDB
 
 # CodeChallenge-iOS TMDB
 The code challenge is a client for iOS intended to load and search Movies from TMDB service. 
-The main features are:
+
+### The main features are:
+
   ** Load popular movies list
   ** Search movies
   ** Cache movies locally
   ** 
-Bonus: 
+
+### Bonus: 
   ** Pagination for Movies list
 
 ## Code Architecture

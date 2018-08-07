@@ -17,6 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Result" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qzo-ob-X9N">
+                                <rect key="frame" x="20" y="315.5" width="335" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="0.25490196079999999" green="0.25098039220000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NLE-qx-QJx">
                                 <rect key="frame" x="0.0" y="116" width="375" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -38,7 +44,11 @@
                             <constraint firstItem="baC-se-poh" firstAttribute="trailing" secondItem="NLE-qx-QJx" secondAttribute="trailing" id="Qjs-vm-6HT"/>
                             <constraint firstItem="NLE-qx-QJx" firstAttribute="top" secondItem="baC-se-poh" secondAttribute="top" id="SWe-K5-jrz"/>
                             <constraint firstItem="baC-se-poh" firstAttribute="bottom" secondItem="NLE-qx-QJx" secondAttribute="bottom" id="gzd-zA-ZIO"/>
+                            <constraint firstItem="qzo-ob-X9N" firstAttribute="centerX" secondItem="MpJ-X4-bRq" secondAttribute="centerX" id="hTM-fQ-o2M"/>
+                            <constraint firstItem="qzo-ob-X9N" firstAttribute="leading" secondItem="baC-se-poh" secondAttribute="leading" constant="20" id="kAQ-jA-0w6"/>
                             <constraint firstItem="ZWW-qz-IQ7" firstAttribute="trailing" secondItem="baC-se-poh" secondAttribute="trailing" id="n3P-XD-iNC"/>
+                            <constraint firstItem="qzo-ob-X9N" firstAttribute="centerY" secondItem="MpJ-X4-bRq" secondAttribute="centerY" id="p0v-j2-6hz"/>
+                            <constraint firstItem="baC-se-poh" firstAttribute="trailing" secondItem="qzo-ob-X9N" secondAttribute="trailing" constant="20" id="yhp-Nq-GCH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="baC-se-poh"/>
                     </view>
@@ -48,6 +58,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="empyStateLabel" destination="qzo-ob-X9N" id="Rpe-GJ-mj7"/>
                         <outlet property="loadingIndicator" destination="ZWW-qz-IQ7" id="yKa-sR-6Xc"/>
                         <outlet property="refreshMovies" destination="cb5-8y-b0g" id="UVp-VO-uSn"/>
                         <outlet property="searchDisplayController" destination="dHn-N0-BRq" id="KZJ-RZ-mGR"/>

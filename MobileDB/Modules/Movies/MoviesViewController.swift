@@ -14,14 +14,17 @@ final class MoviesViewController: UIViewController {
   @IBOutlet private weak var tableView: UITableView!
   @IBOutlet private weak var refreshMovies: UIBarButtonItem!
   @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
+  @IBOutlet weak var empyStateLabel: UILabel!
   
   private let disposeBag = DisposeBag()
   private let viewModel = MoviesViewModel()
-  
+  private let searchController = UISearchController(searchResultsController: nil)
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
     tableView.register(MovieViewCell.self)
+    setupSearchBar()
     setupOutletsBinds()
   }
   
@@ -34,6 +37,37 @@ final class MoviesViewController: UIViewController {
   }
 }
 
+// MARK: - Extension Search Bar setup
+private extension MoviesViewController {
+  func setupSearchBar() {
+    searchController.obscuresBackgroundDuringPresentation = false
+    searchController.searchBar.placeholder = "Search Movies"
+    searchController.isActive = true
+    navigationItem.searchController = searchController
+    definesPresentationContext = true
+
+    searchController.searchBar.rx.cancelButtonClicked
+      .bind(to: viewModel.willCancelSearch).disposed(by: disposeBag)
+    searchController.rx.didPresent
+      .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
+    
+    searchController.searchBar.rx.text.orEmpty
+      .debounce(0.5, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+      .filter { !$0.isEmpty }
+      .bind(to: viewModel.searchMovie).disposed(by: disposeBag)
+    
+    searchController.searchBar.rx.cancelButtonClicked.debug()
+      .bind(to: viewModel.willCancelSearch)
+      .disposed(by: disposeBag)
+    
+    viewModel.emptyStateMessage.bind(to: empyStateLabel.rx.text).disposed(by: disposeBag)
+    viewModel.emptyStateMessage.map { $0.isEmpty }
+      .bind(to: tableView.rx.isHidden).disposed(by: disposeBag)
+  }
+}
+
+// MARK: - Setup table view bind and observables
 private extension MoviesViewController {
   func setupOutletsBinds() {
     // TableView
@@ -59,7 +93,6 @@ private extension MoviesViewController {
     
     tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
       guard let cell = cell as? MovieViewCell else { return }
-      
       cell.viewModel.loadPosterImage()
     }).subscribe()
       .disposed(by: disposeBag)
@@ -77,10 +110,10 @@ private extension MoviesViewController {
     tableView.rx.modelSelected(MovieDetailModel.self)
       .subscribe(onNext: { [weak self] model in
         guard let id = model.id else { return }
-        self?.viewModel.loadMovieId.onNext("\(id)")
+        self?.viewModel.willSearchMovieDetail.onNext("\(id)")
       }).disposed(by: disposeBag)
     
-    viewModel.movieDetail
+    viewModel.didReceiveMovieDetail
       .observeOn(MainScheduler.asyncInstance)
       .subscribe(onNext: { [weak self] model in
       self?.presentMovieDetail(with: model)

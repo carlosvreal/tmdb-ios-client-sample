@@ -31,7 +31,7 @@ final class MoviesViewModel {
   let willCancelSearch = PublishSubject<Void>()
   let emptyStateMessage = PublishSubject<String>()
   
-  private var page = 0
+  private let page = Variable(0)
   private let service: MoviesServiceProtocol
   private let disposeBag: DisposeBag
   private let pagination = BehaviorSubject(value: 0)
@@ -72,8 +72,8 @@ private extension MoviesViewModel {
       .flatMap { [weak self] page -> Observable<[MovieDetailModel]> in
         guard let strongSelf = self else { return .just([]) }
         strongSelf.dataSource.value.removeAll()
-        strongSelf.page = 1
-        return strongSelf.loadMovies(from: strongSelf.page)
+        strongSelf.page.value = 1
+        return strongSelf.loadMovies(from: strongSelf.page.value)
       }.bind(to: dataSource)
       .disposed(by: disposeBag)
     
@@ -85,25 +85,29 @@ private extension MoviesViewModel {
     willCleanSearchResult.subscribe(onNext: { [weak self] in
       guard let strongSelf = self else { return }
       strongSelf.dataSource.value.removeAll()
-      strongSelf.page = 1
+      strongSelf.page.value = 1
     }).disposed(by: disposeBag)
     
     // Load movie detail
     willSearchMovieDetail
       .flatMap { [weak self] id -> Observable<MovieDetailModel> in
-        guard let strongSelf = self else { return .error(ServiceError.invalidParameters(message: MoviesViewModelConstants.invalidMovieId)) }
+        guard let strongSelf = self else {
+          return .error(ServiceError.invalidParameters(message: MoviesViewModelConstants.invalidMovieId))
+        }
         return strongSelf.loadMovieDetail(with: id)
       }.bind(to: didReceiveMovieDetail)
       .disposed(by: disposeBag)
     
     // Pagination
     let paginator = self.nextPage
-      .flatMapLatest { [weak self] _ -> Observable<Int> in
-        guard let strongSelf = self else { return .just(1) }
-        strongSelf.page += 1
-        return .just(strongSelf.page)
-      }
-
+      .withLatestFrom(page.asObservable())
+      .scan(page.value, accumulator: { (accumulated, _) -> Int in
+        return accumulated + 1
+      }).do(onNext: { [weak self] page in
+        guard let strongSelf = self else { return }
+        strongSelf.page.value = page
+      }).share(replay: 1)
+    
     // fetch movies
     let moviesObservable = paginator
       .distinctUntilChanged()
@@ -156,7 +160,7 @@ private extension MoviesViewModel {
 
     isLoadingData.onNext(true)
     return Observable.zip(movies, genres) { ($0, $1) }
-      .filter { self.page <= $0.0.totalPages }
+      .filter { self.page.value <= $0.0.totalPages }
       .map { [weak self] (movies, genres) -> [MovieDetailModel] in
         guard let strongSelf = self else { return [] }
         return strongSelf.mapMoviesGenresToMovieDetail(movies: movies, genres: genres)

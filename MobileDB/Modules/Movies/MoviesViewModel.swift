@@ -158,6 +158,8 @@ private extension MoviesViewModel {
         return strongSelf.mapMoviesGenresToMovieViewData(movies: movies, genres: genres)
       }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewData] in
         return currentMovies + newMovies
+      }.map { movies -> [MovieViewData] in
+        return movies.sorted(by: { $0.popularity > $1.popularity })
       }.do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
         }, onError: { [weak self] _ in
@@ -193,6 +195,7 @@ private extension MoviesViewModel {
                             description: movie.description,
                             runtime: movie.runtime,
                             language: language,
-                            homepageLink: movie.homepage)
+                            homepageLink: movie.homepage,
+                            popularity: movie.popularity ?? 0)
   }
 }

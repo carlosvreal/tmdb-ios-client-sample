@@ -1,0 +1,94 @@
+{
+  "adult":false,
+  "backdrop_path":"/ndlQ2Cuc3cjTL7lTynw6I4boP4S.jpg",
+  "belongs_to_collection":{
+    "id":531242,
+    "name":"Suicide Squad Collection",
+    "poster_path":"/377PpA9qCKrKZA0V3i7F4xTdkgV.jpg",
+    "backdrop_path":"/jxWpUDJoXQII0fvaTLqn0bw1C7p.jpg"
+  },
+  "budget":176000000,
+  "genres":[
+    {
+      "id":28,
+      "name":"Action"
+    },
+    {
+      "id":12,
+      "name":"Adventure"
+    },
+    {
+      "id":80,
+      "name":"Crime"
+    },
+    {
+      "id":14,
+      "name":"Fantasy"
+    },
+    {
+      "id":878,
+      "name":"Science Fiction"
+    }
+  ],
+  "homepage":"http://www.suicidesquad.com/",
+  "id":297761,
+  "imdb_id":"tt1386697",
+  "original_language":"en",
+  "original_title":"Suicide Squad",
+  "overview":"From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
+  "popularity":21.255,
+  "poster_path":"/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg",
+  "production_companies":[
+    {
+      "id":507,
+      "logo_path":"/z7H707qUWigbjHnJDMfj6QITEpb.png",
+      "name":"Atlas Entertainment",
+      "origin_country":"US"
+    },
+    {
+      "id":429,
+      "logo_path":"/2Tc1P3Ac8M479naPp1kYT3izLS5.png",
+      "name":"DC Comics",
+      "origin_country":"US"
+    },
+    {
+      "id":9993,
+      "logo_path":"/2Tc1P3Ac8M479naPp1kYT3izLS5.png",
+      "name":"DC Entertainment",
+      "origin_country":"US"
+    },
+    {
+      "id":444,
+      "logo_path":null,
+      "name":"Dune Entertainment",
+      "origin_country":""
+    },
+    {
+      "id":174,
+      "logo_path":"/ky0xOc5OrhzkZ1N6KyUxacfQsCk.png",
+      "name":"Warner Bros. Pictures",
+      "origin_country":"US"
+    }
+  ],
+  "production_countries":[
+    {
+      "iso_3166_1":"US",
+      "name":"United States of America"
+    }
+  ],
+  "release_date":"2016-08-02",
+  "revenue":745600054,
+  "runtime":124,
+  "spoken_languages":[
+    {
+      "iso_639_1":"en",
+      "name":"English"
+    }
+  ],
+  "status":"Released",
+  "tagline":"Worst Heroes Ever",
+  "title":"Suicide Squad",
+  "video":false,
+  "vote_average":5.9,
+  "vote_count":10960
+}

@@ -16,6 +16,11 @@ extension URLSession: SessionHandler {
       return
     }
     
+    if let key = urlRequest.url?.absoluteString,
+      let dataAvailable = UserDefaults.standard.data(forKey: key) {
+      return completion(.success(dataAvailable))
+    }
+    
     let task = dataTask(with: urlRequest) { (data, _, error) in
       guard let data = data else {
         if let error = error {
@@ -25,6 +30,11 @@ extension URLSession: SessionHandler {
         
         completion(.error(.unknown))
         return
+      }
+      
+      if let key = urlRequest.url?.absoluteString,
+        UserDefaults.standard.data(forKey: key) == nil {
+        UserDefaults.standard.set(data, forKey: key)
       }
       
       completion(.success(data))

@@ -100,6 +100,9 @@ private extension MoviesViewModel {
     
     //serach movies
     let serachObservable = Observable.combineLatest(searchMovie, Observable.just(1)) { ($0, $1) }
+      .do(onNext: { [weak self] _ in
+        self?.dataSource.value.removeAll()
+      })
       .skipWhile { $0.0.isEmpty }
       .flatMap { [weak self] (query, page) -> Observable<[MovieViewData]> in
         guard let strongSelf = self else { return .just([]) }

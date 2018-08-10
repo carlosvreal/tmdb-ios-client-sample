@@ -17,6 +17,7 @@ final class MovieViewCellViewModel {
   
   private var model: MovieViewData?
   private let service: ConfigServiceProtocol
+  private var disposeBag = DisposeBag()
   
   init(service: ConfigServiceProtocol) {
     self.service = service
@@ -44,14 +45,18 @@ final class MovieViewCellViewModel {
     }
   }
   
+  func disposeImageLoader() {
+    disposeBag = DisposeBag()
+  }
+  
   func loadPosterImage() {
     guard let model = model, let imagePath = model.posterImagePath else { return }
     // Once the Single call receives a success or error the subscriber will disposed
-    _ = service
+    service
       .loadPoster(for: imagePath)
       .observeOn(MainScheduler.asyncInstance)
       .subscribe(onSuccess: { [weak self] image in
         self?.posterImage.onNext(image)
-      })
+      }).disposed(by: disposeBag)
   }
 }

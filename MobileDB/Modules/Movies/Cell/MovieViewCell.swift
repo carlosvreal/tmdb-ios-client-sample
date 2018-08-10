@@ -32,6 +32,7 @@ final class MovieViewCell: UITableViewCell, ReusableIdentifier {
     genres.text = nil
     releaseYear.text = nil
     popularity.text = nil
+    viewModel.disposeImageLoader()
   }
   
   private func setupBind() {

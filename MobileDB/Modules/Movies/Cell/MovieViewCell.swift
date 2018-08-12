@@ -16,7 +16,7 @@ final class MovieViewCell: UITableViewCell, ReusableIdentifier {
   @IBOutlet private weak var popularity: UILabel!
   
   let viewModel = MovieViewCellViewModel(service: ConfigServiceProvider())
-  private var disposeBag = DisposeBag()
+  private var disposeBag: DisposeBag!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -32,10 +32,14 @@ final class MovieViewCell: UITableViewCell, ReusableIdentifier {
     genres.text = nil
     releaseYear.text = nil
     popularity.text = nil
-    viewModel.disposeImageLoader()
+    viewModel.willReuseCell()
+
+    setupBind()
   }
   
   private func setupBind() {
+    disposeBag = DisposeBag()
+    
     viewModel.posterImage.bind(to: posterImageView.rx.image).disposed(by: disposeBag)
     viewModel.title.bind(to: title.rx.text).disposed(by: disposeBag)
     viewModel.genres.bind(to: genres.rx.text).disposed(by: disposeBag)

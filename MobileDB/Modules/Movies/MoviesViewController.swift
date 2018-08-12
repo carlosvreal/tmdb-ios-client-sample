@@ -99,7 +99,7 @@ private extension MoviesViewController {
     
     tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
       guard let cell = cell as? MovieViewCell else { return }
-      cell.viewModel.loadPosterImage()
+      cell.viewModel.willDisplayCell()
     }).subscribe()
       .disposed(by: disposeBag)
     

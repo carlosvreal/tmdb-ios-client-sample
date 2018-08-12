@@ -14,6 +14,7 @@ final class MovieViewCellViewModel {
   let genres = PublishSubject<String>()
   let posterImage = PublishSubject<UIImage>()
   let popularity = PublishSubject<String>()
+  let loadingImage = BehaviorSubject(value: false)
   
   private var model: MovieViewData?
   private let service: ConfigServiceProtocol
@@ -53,11 +54,12 @@ final class MovieViewCellViewModel {
 
   private func loadPosterImage() {
     guard let model = model, let imagePath = model.posterImagePath else { return }
-    service
-      .loadPoster(for: imagePath)
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe(onSuccess: { [weak self] image in
-        self?.posterImage.onNext(image)
+
+    loadingImage.onNext(true)
+    service.loadPoster(for: imagePath)
+      .subscribe(onSuccess: { [unowned self] image in
+        self.loadingImage.onNext(false)
+        self.posterImage.onNext(image)
       }).disposed(by: disposeBag)
   }
 }

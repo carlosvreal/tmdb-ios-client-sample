@@ -14,6 +14,7 @@ final class MovieViewCell: UITableViewCell, ReusableIdentifier {
   @IBOutlet private weak var genres: UILabel!
   @IBOutlet private weak var releaseYear: UILabel!
   @IBOutlet private weak var popularity: UILabel!
+  @IBOutlet private weak var loadingImage: UIActivityIndicatorView!
   
   let viewModel = MovieViewCellViewModel(service: ConfigServiceProvider())
   private var disposeBag: DisposeBag!
@@ -40,10 +41,13 @@ final class MovieViewCell: UITableViewCell, ReusableIdentifier {
   private func setupBind() {
     disposeBag = DisposeBag()
     
-    viewModel.posterImage.bind(to: posterImageView.rx.image).disposed(by: disposeBag)
+    viewModel.posterImage.observeOn(MainScheduler.asyncInstance)
+      .bind(to: posterImageView.rx.image).disposed(by: disposeBag)
     viewModel.title.bind(to: title.rx.text).disposed(by: disposeBag)
     viewModel.genres.bind(to: genres.rx.text).disposed(by: disposeBag)
     viewModel.releaseYear.bind(to: releaseYear.rx.text).disposed(by: disposeBag)
     viewModel.popularity.bind(to: popularity.rx.text).disposed(by: disposeBag)
+    viewModel.loadingImage.distinctUntilChanged()
+      .bind(to: loadingImage.rx.isAnimating).disposed(by: disposeBag)
   }
 }

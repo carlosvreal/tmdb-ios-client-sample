@@ -19,7 +19,7 @@ final class MoviesViewModel {
   var moviesDataSource: Driver<[MovieViewData]> {
     return dataSource.asDriver()
   }
-
+  
   let dataSource = Variable<[MovieViewData]>([])
   let refresh = PublishSubject<Void>()
   let nextPage = PublishSubject<Void>()
@@ -30,7 +30,7 @@ final class MoviesViewModel {
   let searchMovie = PublishSubject<String>()
   let willCleanSearchResult = PublishSubject<Void>()
   let willCancelSearch = PublishSubject<Void>()
-
+  
   private let page = Variable(0)
   private let service: MoviesServiceProtocol
   private let disposeBag: DisposeBag
@@ -42,7 +42,7 @@ final class MoviesViewModel {
     
     setupServiceCalls()
     
-   }
+  }
   
   func loadMoviesList() {
     // Load first page
@@ -72,7 +72,7 @@ private extension MoviesViewModel {
         self.dataSource.value.removeAll()
         self.page.value = 1
       }).disposed(by: disposeBag)
-
+    
     // Load movie detail
     willSearchMovieDetail
       .flatMap { [unowned self] id -> Observable<MovieViewData> in
@@ -99,12 +99,18 @@ private extension MoviesViewModel {
     }
     
     //serach movies
-    let serachObservable = Observable.combineLatest(searchMovie, Observable.just(1)) { ($0, $1) }
-      .skipWhile { $0.0.isEmpty }
+    let firstPage = searchMovie.flatMap { _ -> Observable<Int> in
+      return .just(1)
+    }
+    
+    let serachObservable = Observable.combineLatest(searchMovie, firstPage) { ($0, $1) }
+      .do(onNext: { [weak self] _ in
+        self?.dataSource.value.removeAll()
+      }).skipWhile { $0.0.isEmpty }
       .flatMap { [weak self] (query, page) -> Observable<[MovieViewData]> in
         guard let strongSelf = self else { return .just([]) }
         return strongSelf.searchMovies(query: query, from: page)
-      }
+    }
     
     moviesObservable.observeOn(MainScheduler.asyncInstance)
       .bind(to: dataSource).disposed(by: disposeBag)
@@ -117,14 +123,14 @@ private extension MoviesViewModel {
     return service.fetchMovieDetail(with: identifier).asObservable()
       .map { [weak self] movie -> MovieViewData? in
         return self?.mapMovieToMovieViewData(movie: movie,
-                                           genres: movie.genres,
-                                           language: movie.spokenLanguage?.first?.name)
+                                             genres: movie.genres,
+                                             language: movie.spokenLanguage?.first?.name)
       }.flatMap { Observable.from(optional: $0) }
       .do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
-      }, onError: { [weak self] error in
-        self?.isLoadingData.onNext(false)
-        self?.errorMessage.onNext(error.localizedDescription)
+        }, onError: { [weak self] error in
+          self?.isLoadingData.onNext(false)
+          self?.errorMessage.onNext(error.localizedDescription)
       })
   }
   
@@ -178,24 +184,24 @@ private extension MoviesViewModel {
         }.compactMap { $0 }
       
       return self?.mapMovieToMovieViewData(movie: movie,
-                                         genres: movieGenres,
-                                         language: movie.language)
+                                           genres: movieGenres,
+                                           language: movie.language)
       }.compactMap { $0 }
   }
   
   func mapMovieToMovieViewData(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
     return MovieViewData(id: movie.id,
-                            title: movie.title,
-                            posterImagePath: movie.poster,
-                            backdropImagePath: movie.backdrop,
-                            ratingScore: movie.rating,
-                            releaseYear: movie.releaseDate,
-                            genres: genres,
-                            revenue: movie.revenue,
-                            description: movie.description,
-                            runtime: movie.runtime,
-                            language: language,
-                            homepageLink: movie.homepage,
-                            popularity: movie.popularity ?? 0)
+                         title: movie.title,
+                         posterImagePath: movie.poster,
+                         backdropImagePath: movie.backdrop,
+                         ratingScore: movie.rating,
+                         releaseYear: movie.releaseDate,
+                         genres: genres,
+                         revenue: movie.revenue,
+                         description: movie.description,
+                         runtime: movie.runtime,
+                         language: language,
+                         homepageLink: movie.homepage,
+                         popularity: movie.popularity ?? 0)
   }
 }

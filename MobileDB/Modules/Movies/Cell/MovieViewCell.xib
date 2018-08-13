@@ -60,6 +60,9 @@
                             <constraint firstAttribute="width" constant="100" id="sSG-rV-EaE"/>
                         </constraints>
                     </imageView>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MQp-2E-nyB">
+                        <rect key="frame" x="50" y="74" width="20" height="20"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="eUz-nS-03h" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="0wW-Pt-04u"/>
@@ -67,6 +70,7 @@
                     <constraint firstItem="ubC-ny-EMo" firstAttribute="leading" secondItem="Fxq-20-0bP" secondAttribute="trailing" constant="-1" id="8yW-dQ-UrG"/>
                     <constraint firstItem="RbW-6E-qdg" firstAttribute="baseline" secondItem="eUz-nS-03h" secondAttribute="baseline" constant="-10" id="CK9-kK-YVT"/>
                     <constraint firstItem="ubC-ny-EMo" firstAttribute="trailing" secondItem="yaY-cB-yFf" secondAttribute="trailing" id="CPO-QE-0md"/>
+                    <constraint firstItem="MQp-2E-nyB" firstAttribute="centerX" secondItem="eUz-nS-03h" secondAttribute="centerX" id="DTM-9w-dA4"/>
                     <constraint firstItem="1oR-ub-7jd" firstAttribute="trailing" secondItem="yaY-cB-yFf" secondAttribute="trailing" id="Ecu-15-cO1"/>
                     <constraint firstItem="eUz-nS-03h" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="LIx-He-6M4"/>
                     <constraint firstItem="Fxq-20-0bP" firstAttribute="centerY" secondItem="ubC-ny-EMo" secondAttribute="centerY" id="Vbu-Od-gGO"/>
@@ -78,12 +82,14 @@
                     <constraint firstItem="RbW-6E-qdg" firstAttribute="leading" secondItem="eUz-nS-03h" secondAttribute="trailing" constant="15" id="o2V-EO-tu4"/>
                     <constraint firstItem="yaY-cB-yFf" firstAttribute="leading" secondItem="1oR-ub-7jd" secondAttribute="leading" id="oTK-Oa-CYq"/>
                     <constraint firstItem="RbW-6E-qdg" firstAttribute="top" secondItem="1oR-ub-7jd" secondAttribute="bottom" priority="250" constant="44" id="seJ-e5-DwU"/>
+                    <constraint firstItem="MQp-2E-nyB" firstAttribute="centerY" secondItem="eUz-nS-03h" secondAttribute="centerY" id="tZt-IY-HEI"/>
                     <constraint firstItem="ubC-ny-EMo" firstAttribute="baseline" secondItem="RbW-6E-qdg" secondAttribute="baseline" id="yZw-pz-O77"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="genres" destination="1oR-ub-7jd" id="J8R-DX-KXJ"/>
+                <outlet property="loadingImage" destination="MQp-2E-nyB" id="g2q-eO-1gu"/>
                 <outlet property="popularity" destination="ubC-ny-EMo" id="xKo-jQ-TZ1"/>
                 <outlet property="posterImageView" destination="eUz-nS-03h" id="F0j-fq-ZBq"/>
                 <outlet property="releaseYear" destination="RbW-6E-qdg" id="mB3-gc-0O5"/>

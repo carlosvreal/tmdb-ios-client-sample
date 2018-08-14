@@ -102,6 +102,15 @@ extension MoviesAPI: RequestableAPI {
     return .get
   }
   
+  var cache: Bool {
+    switch self {
+    case .search, .configuration:
+      return false
+    case .movie, .movies, .genres, .posterImage, .backdropImage:
+      return true
+    }
+  }
+  
   var urlRequest: URLRequest? {
     guard let path = path else { return nil }
     

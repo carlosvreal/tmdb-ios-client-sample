@@ -8,12 +8,20 @@
 
 import Foundation
 
-struct MoviesCache: Cacheable {
-  func add(data: Data, forKey: String) {
-    UserDefaults.standard.set(data, forKey: forKey)
+struct MoviesCache: Cacheable { 
+  private static var repository = NSCache<NSString, NSData>()
+  
+  static func add(data: Data, key: String?) {
+    guard let key = key else { return }
+    let objectKey = NSString(string: key)
+    
+    MoviesCache.repository.setObject(data as NSData, forKey: objectKey)
   }
   
-  func object(forKey: String) -> Data? {
-    return UserDefaults.standard.data(forKey: forKey)
+  static func object(forKey: String?) -> Data? {
+    guard let key = forKey else { return nil }
+    let objectKey = NSString(string: key)
+    
+    return MoviesCache.repository.object(forKey: objectKey) as Data?
   }
 }

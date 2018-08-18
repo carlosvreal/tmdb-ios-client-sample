@@ -11,6 +11,6 @@ import Foundation
 protocol Cacheable {
   associatedtype Object: Codable
   
-  func add(data: Object, forKey: String)
-  func object(forKey: String) -> Object?
+  static func add(data: Object, key: String?)
+  static func object(forKey: String?) -> Object?
 }

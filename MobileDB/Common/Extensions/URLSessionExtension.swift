@@ -18,7 +18,7 @@ extension URLSession: SessionHandler {
     
     if requestType.cache {
       if let key = urlRequest.url?.absoluteString,
-        let dataAvailable = MoviesCache().object(forKey: key) {
+        let dataAvailable = MoviesCache.object(forKey: key) {
         return completion(.success(dataAvailable))
       }
     }
@@ -35,9 +35,7 @@ extension URLSession: SessionHandler {
       }
       
       if requestType.cache {
-        if let key = urlRequest.url?.absoluteString {
-          MoviesCache().add(data: data, forKey: key)
-        }
+        MoviesCache.add(data: data, key: urlRequest.url?.absoluteString)
       }
       
       completion(.success(data))

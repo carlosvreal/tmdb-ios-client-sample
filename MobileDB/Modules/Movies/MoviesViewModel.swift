@@ -33,15 +33,13 @@ final class MoviesViewModel {
   
   private let page = Variable(0)
   private let service: MoviesServiceProtocol
-  private let disposeBag: DisposeBag
+  private let disposeBag = DisposeBag()
   private let pagination = BehaviorSubject(value: 0)
   
   init(service: MoviesServiceProtocol = MoviesServiceProvider()) {
     self.service = service
-    self.disposeBag = DisposeBag()
-    
+
     setupServiceCalls()
-    
   }
   
   func loadMoviesList() {

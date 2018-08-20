@@ -77,7 +77,10 @@ extension MoviesAPI: RequestableAPI {
       
       return params
     case .movies(let page):
-      guard page > 0 else { return nil }
+      guard page > 0 else {
+        assertionFailure("Invalid Page: Zero")
+        return nil
+      }
       var params = defaultParam
       params[ApiConstants.language] = ApiConstants.enUSLanguage
       params[ApiConstants.page] = "\(page)"

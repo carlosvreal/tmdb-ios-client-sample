@@ -163,7 +163,11 @@ private extension MoviesViewModel {
         guard let strongSelf = self else { return [] }
         return strongSelf.mapMoviesGenresToMovieViewData(movies: movies, genres: genres)
       }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewData] in
-        return currentMovies + newMovies
+        let sortedList = (currentMovies + newMovies)
+          .sorted(by: { (movieA, movieB) -> Bool in
+            return movieA.popularity > movieB.popularity
+          })
+        return sortedList
       }.do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
         }, onError: { [weak self] _ in

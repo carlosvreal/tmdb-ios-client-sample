@@ -41,7 +41,7 @@ final class MoviesViewModel {
       requestDispossble?.disposed(by: disposeBag)
     }
   }
-
+  
   init(service: MoviesServiceProtocol = MoviesServiceProvider(),
        scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .background)) {
     
@@ -68,9 +68,9 @@ private extension MoviesViewModel {
           .do(onNext: { [weak self] _ in
             self?.page += 1
           })
-    }.bind(to: dataSource)
+      }.bind(to: dataSource)
   }
-
+  
   func setupServiceCalls() {
     // Refresh
     refresh

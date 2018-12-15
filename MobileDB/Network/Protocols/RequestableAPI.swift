@@ -22,4 +22,5 @@ protocol RequestableAPI {
   var httpMethod: HttpMethod { get }
   var params: [String: Any]? { get }
   var urlRequest: URLRequest? { get }
+  var cache: Bool { get }
 }

@@ -9,25 +9,33 @@
 import RxSwift
 
 final class MovieViewCellViewModel {
-  let title = PublishSubject<String>()
+  let title = PublishSubject<String?>()
   let releaseYear = PublishSubject<String>()
   let genres = PublishSubject<String>()
   let posterImage = PublishSubject<UIImage>()
   let popularity = PublishSubject<String>()
+  let loadingImage = BehaviorSubject(value: false)
   
   private var model: MovieViewData?
   private let service: ConfigServiceProtocol
+  private var disposeBag = DisposeBag()
   
   init(service: ConfigServiceProtocol) {
     self.service = service
   }
   
+  func willDisplayCell() {
+    loadPosterImage()
+  }
+  
+  func willReuseCell() {
+    disposeBag = DisposeBag()
+  }
+  
   func setupData(with model: MovieViewData) {
     self.model = model
     
-    if let title = model.title {
-      self.title.onNext(title)
-    }
+    title.onNext(model.title)
     
     if let releaseYear = model.releaseYear,
       let year = releaseYear.split(separator: "-").first {
@@ -43,15 +51,15 @@ final class MovieViewCellViewModel {
       self.genres.onNext(genres.formatGenresAsString())
     }
   }
-  
-  func loadPosterImage() {
+
+  private func loadPosterImage() {
     guard let model = model, let imagePath = model.posterImagePath else { return }
-    // Once the Single call receives a success or error the subscriber will disposed
-    _ = service
-      .loadPoster(for: imagePath)
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe(onSuccess: { [weak self] image in
-        self?.posterImage.onNext(image)
-      })
+
+    loadingImage.onNext(true)
+    service.loadPoster(for: imagePath)
+      .subscribe(onSuccess: { [unowned self] image in
+        self.loadingImage.onNext(false)
+        self.posterImage.onNext(image)
+      }).disposed(by: disposeBag)
   }
 }

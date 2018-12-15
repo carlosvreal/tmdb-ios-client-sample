@@ -42,6 +42,7 @@ final class MoviesViewController: UIViewController {
 // MARK: - Extension Search Bar setup
 private extension MoviesViewController {
   func setupSearchBar() {
+    navigationController?.hidesBarsOnSwipe = true
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Movies"
     searchController.isActive = true
@@ -59,7 +60,7 @@ private extension MoviesViewController {
    
     searchQueryObservable
       .filter { !$0.isEmpty }
-      .bind(to: viewModel.searchMovie).disposed(by: disposeBag)
+      .bind(to: viewModel.searchMovieQuery).disposed(by: disposeBag)
     
     searchQueryObservable
       .filter { $0.isEmpty }
@@ -88,10 +89,9 @@ private extension MoviesViewController {
     // Triggers next page
     tableView.rx.willDisplayCell
       .map { [unowned self] (_, indexPath) -> Bool in
-        let numberOfCells = 3
+        let numberOfCells = 1
         return indexPath.item == self.tableView.numberOfRows(inSection: 0) - numberOfCells
       }
-      .distinctUntilChanged()
       .filter { $0 == true }
       .subscribe(onNext: { [weak self] _ in
         self?.viewModel.nextPage.onNext(())
@@ -99,7 +99,7 @@ private extension MoviesViewController {
     
     tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
       guard let cell = cell as? MovieViewCell else { return }
-      cell.viewModel.loadPosterImage()
+      cell.viewModel.willDisplayCell()
     }).subscribe()
       .disposed(by: disposeBag)
     

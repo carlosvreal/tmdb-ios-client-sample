@@ -19,100 +19,105 @@ final class MoviesViewModel {
   var moviesDataSource: Driver<[MovieViewData]> {
     return dataSource.asDriver()
   }
-
-  let dataSource = Variable<[MovieViewData]>([])
+  
   let refresh = PublishSubject<Void>()
   let nextPage = PublishSubject<Void>()
   let willSearchMovieDetail = PublishSubject<String>()
   let errorMessage = PublishSubject<String>()
   let isLoadingData = PublishSubject<Bool>()
   let didReceiveMovieDetail = PublishSubject<MovieViewData>()
-  let searchMovie = PublishSubject<String>()
+  let searchMovieQuery = BehaviorSubject<String?>(value: nil)
   let willCleanSearchResult = PublishSubject<Void>()
   let willCancelSearch = PublishSubject<Void>()
-
-  private let page = Variable(0)
-  private let service: MoviesServiceProtocol
-  private let disposeBag: DisposeBag
-  private let pagination = BehaviorSubject(value: 0)
   
-  init(service: MoviesServiceProtocol = MoviesServiceProvider()) {
+  private let dataSource = BehaviorRelay<[MovieViewData]>(value: [])
+  private var page = 1
+  private let service: MoviesServiceProtocol
+  private let disposeBag = DisposeBag()
+  private let scheduler: SchedulerType
+  private var requestDispossble: Disposable? {
+    didSet {
+      oldValue?.dispose()
+      requestDispossble?.disposed(by: disposeBag)
+    }
+  }
+  
+  init(service: MoviesServiceProtocol = MoviesServiceProvider(),
+       scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .background)) {
+    
     self.service = service
-    self.disposeBag = DisposeBag()
+    self.scheduler = scheduler
     
     setupServiceCalls()
-    
-   }
+    setupMovieDetail()
+  }
   
   func loadMoviesList() {
-    // Load first page
-    nextPage.onNext(())
+    requestMovies()
   }
 }
 
 // MARK: Setup observables
 private extension MoviesViewModel {
+  func requestMovies(query: String? = nil) {
+    requestDispossble = nil
+    requestDispossble = nextPage.startWith(())
+      .flatMapLatest { [weak self] page -> Observable<[MovieViewData]> in
+        guard let strongSelf = self else { return .just([]) }
+        return strongSelf.loadMovies(by: query, from: strongSelf.page)
+          .do(onNext: { [weak self] _ in
+            self?.page += 1
+          })
+      }.bind(to: dataSource)
+  }
+  
   func setupServiceCalls() {
     // Refresh
     refresh
-      .flatMap { [unowned self] page -> Observable<[MovieViewData]> in
-        self.dataSource.value.removeAll()
-        self.page.value = 1
-        return self.loadMovies(from: self.page.value)
-      }.bind(to: dataSource)
-      .disposed(by: disposeBag)
+      .skip(1)
+      .subscribe(onNext: { [unowned self] _ in
+        self.page = 1
+        self.dataSource.accept([])
+        self.requestMovies()
+      }).disposed(by: disposeBag)
     
     // Cancel search
     willCancelSearch.subscribe(onNext: { [unowned self] _ in
-      self.refresh.onNext(())
+      self.page = 1
+      self.dataSource.accept([])
+      self.requestMovies()
     }).disposed(by: disposeBag)
     
-    willCleanSearchResult.skip(1)
+    willCleanSearchResult
+      .skip(1)
       .subscribe(onNext: { [unowned self] in
-        self.dataSource.value.removeAll()
-        self.page.value = 1
+        self.page = 1
+        self.dataSource.accept([])
       }).disposed(by: disposeBag)
+    
+    // Search
+    searchMovieQuery
+      .flatMap { Observable.from(optional: $0) }
+      .filter { !$0.isEmpty }
+      .debounce(0.3, scheduler: MainScheduler.asyncInstance)
+      .subscribe(onNext: { [unowned self] query in
+        self.page = 1
+        self.dataSource.accept([])
+        self.requestMovies(query: query)
+      }).disposed(by: disposeBag)
+  }
+}
 
+// MARK: Movie Detail data
+
+private extension MoviesViewModel {
+  func setupMovieDetail() {
     // Load movie detail
     willSearchMovieDetail
       .flatMap { [unowned self] id -> Observable<MovieViewData> in
         return self.loadMovieDetail(with: id)
       }.bind(to: didReceiveMovieDetail)
       .disposed(by: disposeBag)
-    
-    // Pagination
-    let paginator = nextPage
-      .withLatestFrom(page.asObservable())
-      .scan(page.value, accumulator: { (accumulated, _) -> Int in
-        return accumulated + 1
-      }).do(onNext: { [weak self] page in
-        guard let strongSelf = self else { return }
-        strongSelf.page.value = page
-      })
-    
-    // fetch movies
-    let moviesObservable = paginator
-      .distinctUntilChanged()
-      .flatMap { [weak self] page -> Observable<[MovieViewData]> in
-        guard let strongSelf = self else { return .just([]) }
-        return strongSelf.loadMovies(from: page)
-    }
-    
-    //serach movies
-    let serachObservable = Observable.combineLatest(searchMovie, Observable.just(1)) { ($0, $1) }
-      .do(onNext: { [weak self] _ in
-        self?.dataSource.value.removeAll()
-      })
-      .skipWhile { $0.0.isEmpty }
-      .flatMap { [weak self] (query, page) -> Observable<[MovieViewData]> in
-        guard let strongSelf = self else { return .just([]) }
-        return strongSelf.searchMovies(query: query, from: page)
-      }
-    
-    moviesObservable.observeOn(MainScheduler.asyncInstance)
-      .bind(to: dataSource).disposed(by: disposeBag)
-    serachObservable.observeOn(MainScheduler.asyncInstance)
-      .bind(to: dataSource).disposed(by: disposeBag)
   }
   
   func loadMovieDetail(with identifier: String) -> Observable<MovieViewData> {
@@ -120,49 +125,50 @@ private extension MoviesViewModel {
     return service.fetchMovieDetail(with: identifier).asObservable()
       .map { [weak self] movie -> MovieViewData? in
         return self?.mapMovieToMovieViewData(movie: movie,
-                                           genres: movie.genres,
-                                           language: movie.spokenLanguage?.first?.name)
+                                             genres: movie.genres,
+                                             language: movie.spokenLanguage?.first?.name)
       }.flatMap { Observable.from(optional: $0) }
       .do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
-      }, onError: { [weak self] error in
-        self?.isLoadingData.onNext(false)
-        self?.errorMessage.onNext(error.localizedDescription)
+        }, onError: { [weak self] error in
+          self?.isLoadingData.onNext(false)
+          self?.errorMessage.onNext(error.localizedDescription)
       })
   }
-  
-  func loadMovies(from page: Int) -> Observable<[MovieViewData]> {
-    let fetchMovies = service.fetchMovies(from: page).asObservable()
-    let genres = service.genres().asObservable()
-    
-    return loadMovies(fetchMovies, genres: genres)
-  }
 }
 
-// MARK: Setup Search bind
+// MARK: Load movies content
 private extension MoviesViewModel {
-  func searchMovies(query: String, from page: Int) -> Observable<[MovieViewData]> {
-    let searchMovies = service.search(for: query, page: page).asObservable()
+  func loadMovies(by query: String? = nil, from page: Int) -> Observable<[MovieViewData]> {
     let genres = service.genres().asObservable()
     
-    return loadMovies(searchMovies, genres: genres)
+    var moviesObservable: Observable<Movies>
+    if let query = query, !query.isEmpty {
+      moviesObservable = service.search(for: query, page: page).asObservable()
+    } else {
+      moviesObservable = service.fetchMovies(from: page).asObservable()
+    }
+    
+    return loadMovies(moviesObservable, genres: genres)
   }
 }
 
-// MARK: Load movies
+// MARK: Execute movies fetch
 private extension MoviesViewModel {
   func loadMovies(_ movies: Observable<Movies>, genres: Observable<[Genre]>) -> Observable<[MovieViewData]> {
     isLoadingData.onNext(true)
     
     return Observable.zip(movies, genres) { ($0, $1) }
-      .filter { self.page.value <= $0.0.totalPages }
+      .filter { self.page <= $0.0.totalPages }
       .map { [weak self] (movies, genres) -> [MovieViewData] in
         guard let strongSelf = self else { return [] }
         return strongSelf.mapMoviesGenresToMovieViewData(movies: movies, genres: genres)
       }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewData] in
-        return currentMovies + newMovies
-      }.map { movies -> [MovieViewData] in
-        return movies.sorted(by: { $0.popularity > $1.popularity })
+        let sortedList = (currentMovies + newMovies)
+          .sorted(by: { (movieA, movieB) -> Bool in
+            return movieA.popularity > movieB.popularity
+          })
+        return sortedList
       }.do(onNext: { [weak self] _ in
         self?.isLoadingData.onNext(false)
         }, onError: { [weak self] _ in
@@ -181,24 +187,24 @@ private extension MoviesViewModel {
         }.compactMap { $0 }
       
       return self?.mapMovieToMovieViewData(movie: movie,
-                                         genres: movieGenres,
-                                         language: movie.language)
+                                           genres: movieGenres,
+                                           language: movie.language)
       }.compactMap { $0 }
   }
   
   func mapMovieToMovieViewData(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
     return MovieViewData(id: movie.id,
-                            title: movie.title,
-                            posterImagePath: movie.poster,
-                            backdropImagePath: movie.backdrop,
-                            ratingScore: movie.rating,
-                            releaseYear: movie.releaseDate,
-                            genres: genres,
-                            revenue: movie.revenue,
-                            description: movie.description,
-                            runtime: movie.runtime,
-                            language: language,
-                            homepageLink: movie.homepage,
-                            popularity: movie.popularity ?? 0)
+                         title: movie.title,
+                         posterImagePath: movie.poster,
+                         backdropImagePath: movie.backdrop,
+                         ratingScore: movie.rating,
+                         releaseYear: movie.releaseDate,
+                         genres: genres,
+                         revenue: movie.revenue,
+                         description: movie.description,
+                         runtime: movie.runtime,
+                         language: language,
+                         homepageLink: movie.homepage,
+                         popularity: movie.popularity ?? 0)
   }
 }

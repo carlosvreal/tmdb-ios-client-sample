@@ -48,7 +48,7 @@ class MoviesServiceProviderTests: XCTestCase {
     
     // then
     let movies = observer.observeOn(MainScheduler.instance).toBlocking().firstOrNil()
-    XCTAssertEqual(movies!, StubData.stubMovies(data: moviesData))
+    XCTAssertEqual(movies?.results, StubData.stubMovies(data: moviesData))
   }
   
   func testInvalidFormat_MovieList() {
@@ -156,7 +156,7 @@ class MoviesServiceProviderTests: XCTestCase {
     
     // then
     let movies = observer.observeOn(MainScheduler.instance).toBlocking().firstOrNil()
-    XCTAssertEqual(movies!, StubData.stubMovies(data: moviesData))
+    XCTAssertEqual(movies?.results, StubData.stubMovies(data: moviesData))
   }
   
   func testInvalidFormat_SearchList() {

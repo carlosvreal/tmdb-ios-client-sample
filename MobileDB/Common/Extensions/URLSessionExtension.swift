@@ -16,9 +16,11 @@ extension URLSession: SessionHandler {
       return
     }
     
-    if let key = urlRequest.url?.absoluteString,
-      let dataAvailable = UserDefaults.standard.data(forKey: key) {
-      return completion(.success(dataAvailable))
+    if requestType.cache {
+      if let key = urlRequest.url?.absoluteString,
+        let dataAvailable = MoviesCache.object(forKey: key) {
+        return completion(.success(dataAvailable))
+      }
     }
     
     let task = dataTask(with: urlRequest) { (data, _, error) in
@@ -32,9 +34,8 @@ extension URLSession: SessionHandler {
         return
       }
       
-      if let key = urlRequest.url?.absoluteString,
-        UserDefaults.standard.data(forKey: key) == nil {
-        UserDefaults.standard.set(data, forKey: key)
+      if requestType.cache {
+        MoviesCache.add(data: data, key: urlRequest.url?.absoluteString)
       }
       
       completion(.success(data))

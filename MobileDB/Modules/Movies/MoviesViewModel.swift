@@ -53,13 +53,13 @@ final class MoviesViewModel {
   }
   
   func loadMoviesList() {
-    requestMoviesNew()
+    requestMovies()
   }
 }
 
 // MARK: Setup observables
 private extension MoviesViewModel {
-  func requestMoviesNew(query: String? = nil) {
+  func requestMovies(query: String? = nil) {
     requestDispossble = nil
     requestDispossble = nextPage.startWith(())
       .flatMapLatest { [weak self] page -> Observable<[MovieViewData]> in
@@ -78,14 +78,14 @@ private extension MoviesViewModel {
       .subscribe(onNext: { [unowned self] _ in
         self.page = 1
         self.dataSource.accept([])
-        self.requestMoviesNew()
+        self.requestMovies()
       }).disposed(by: disposeBag)
     
     // Cancel search
     willCancelSearch.subscribe(onNext: { [unowned self] _ in
       self.page = 1
       self.dataSource.accept([])
-      self.requestMoviesNew()
+      self.requestMovies()
     }).disposed(by: disposeBag)
     
     willCleanSearchResult
@@ -95,6 +95,7 @@ private extension MoviesViewModel {
         self.dataSource.accept([])
       }).disposed(by: disposeBag)
     
+    // Search
     searchMovieQuery
       .flatMap { Observable.from(optional: $0) }
       .filter { !$0.isEmpty }
@@ -102,7 +103,7 @@ private extension MoviesViewModel {
       .subscribe(onNext: { [unowned self] query in
         self.page = 1
         self.dataSource.accept([])
-        self.requestMoviesNew(query: query)
+        self.requestMovies(query: query)
       }).disposed(by: disposeBag)
   }
 }

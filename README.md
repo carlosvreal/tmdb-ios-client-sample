@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/carlosvreal/moviesTMDB.svg)](https://travis-ci.org/carlosvreal/moviesTMDB ) [![codecov.io](https://codecov.io/gh/codecov/example-swift/branch/master/graphs/badge.svg)](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master)
+
 # Movies
 Movies TMDB
 

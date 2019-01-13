@@ -20,10 +20,10 @@ struct SpokenLanguage: Decodable {
 struct Movie: Decodable {
   let id: Int?
   let title: String?
-  let poster: String?
-  let backdrop: String?
-  let description: String?
-  let language: String?
+  let posterPath: String?
+  let backdropPath: String?
+  let overview: String?
+  let originalLanguage: String?
   let popularity: Double?
   let releaseDate: String?
   let genreIds: [Int]?
@@ -39,10 +39,10 @@ extension Movie {
   enum CodingKeys: String, CodingKey {
     case id
     case title
-    case backdrop = "backdrop_path"
-    case poster = "poster_path"
-    case description = "overview"
-    case language = "original_language"
+    case backdropPath = "backdrop_path"
+    case posterPath = "poster_path"
+    case overview
+    case originalLanguage = "original_language"
     case popularity
     case releaseDate = "release_date"
     case genreIds = "genre_ids"

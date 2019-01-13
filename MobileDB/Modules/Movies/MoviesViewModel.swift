@@ -57,7 +57,8 @@ final class MoviesViewModel {
   }
 }
 
-// MARK: Setup observables
+// MARK: - Setup observables
+
 private extension MoviesViewModel {
   func requestMovies(query: String? = nil) {
     requestDispossble = nil
@@ -108,7 +109,7 @@ private extension MoviesViewModel {
   }
 }
 
-// MARK: Movie Detail data
+// MARK: - Movie Detail data
 
 private extension MoviesViewModel {
   func setupMovieDetail() {
@@ -137,7 +138,8 @@ private extension MoviesViewModel {
   }
 }
 
-// MARK: Load movies content
+// MARK: - Load movies content
+
 private extension MoviesViewModel {
   func loadMovies(by query: String? = nil, from page: Int) -> Observable<[MovieViewData]> {
     let genres = service.genres().asObservable()
@@ -153,7 +155,8 @@ private extension MoviesViewModel {
   }
 }
 
-// MARK: Execute movies fetch
+// MARK: - Execute movies fetch
+
 private extension MoviesViewModel {
   func loadMovies(_ movies: Observable<Movies>, genres: Observable<[Genre]>) -> Observable<[MovieViewData]> {
     isLoadingData.onNext(true)
@@ -174,11 +177,14 @@ private extension MoviesViewModel {
         }, onError: { [weak self] _ in
           self?.isLoadingData.onNext(false)
           self?.errorMessage.onNext(MoviesViewModelConstants.requestFailed)
-      })
+      }, onDispose: { [weak self] in
+        self?.isLoadingData.onNext(false)
+    })
   }
 }
 
-// MARK: Utility map methods
+// MARK: - Utility map methods
+
 private extension MoviesViewModel {
   func mapMoviesGenresToMovieViewData(movies: Movies, genres: [Genre]) -> [MovieViewData] {
     return movies.results.map { [weak self] movie -> MovieViewData? in
@@ -188,20 +194,20 @@ private extension MoviesViewModel {
       
       return self?.mapMovieToMovieViewData(movie: movie,
                                            genres: movieGenres,
-                                           language: movie.language)
+                                           language: movie.originalLanguage)
       }.compactMap { $0 }
   }
   
   func mapMovieToMovieViewData(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
     return MovieViewData(id: movie.id,
                          title: movie.title,
-                         posterImagePath: movie.poster,
-                         backdropImagePath: movie.backdrop,
+                         posterImagePath: movie.posterPath,
+                         backdropImagePath: movie.backdropPath,
                          ratingScore: movie.rating,
                          releaseYear: movie.releaseDate,
                          genres: genres,
                          revenue: movie.revenue,
-                         description: movie.description,
+                         description: movie.overview,
                          runtime: movie.runtime,
                          language: language,
                          homepageLink: movie.homepage,

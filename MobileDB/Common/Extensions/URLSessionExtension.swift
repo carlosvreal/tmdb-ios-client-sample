@@ -35,6 +35,11 @@ extension URLSession: SessionHandler {
         return
       }
       
+      guard !data.isEmpty else {
+          completion(.error(.requestFailed(error)))
+          return
+      }
+        
       if requestType.cacheEnabled {
         MoviesCache.add(data: data, key: urlRequest.url?.absoluteString)
       }

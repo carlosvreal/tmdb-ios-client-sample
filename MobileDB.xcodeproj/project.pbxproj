@@ -275,7 +275,6 @@
 		677898B121178C5000B7B532 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				6703E4422118D7A900811F90 /* ViewData */,
 				67E5BB232118A491003D3679 /* MovieDetails */,
 				677898B221178C5F00B7B532 /* Movies */,
 			);
@@ -384,6 +383,7 @@
 		67E5BB232118A491003D3679 /* MovieDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6703E4422118D7A900811F90 /* ViewData */,
 				67E5BB242118A4C3003D3679 /* MovieDetails.storyboard */,
 				67E5BB262118A4DE003D3679 /* MovieDetailsViewController.swift */,
 				67E5BB282118A517003D3679 /* MovieDetailsViewModel.swift */,

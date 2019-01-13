@@ -89,7 +89,7 @@ private extension MoviesViewController {
     // Triggers next page
     tableView.rx.willDisplayCell
       .map { [unowned self] (_, indexPath) -> Bool in
-        let numberOfCells = 1
+        let numberOfCells = 2
         return indexPath.item == self.tableView.numberOfRows(inSection: 0) - numberOfCells
       }
       .filter { $0 == true }

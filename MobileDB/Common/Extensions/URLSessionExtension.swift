@@ -12,11 +12,12 @@ extension URLSession: SessionHandler {
   func executeRequest(with requestType: RequestableAPI,
                       completion: @escaping SessionHandler.Completion) {
     guard let urlRequest = requestType.urlRequest else {
+      completion(.error(.invalidParameters(message: "Invalid parameters request")))
       assertionFailure("Invalid parameters request")
       return
     }
     
-    if requestType.cache {
+    if requestType.cacheEnabled {
       if let key = urlRequest.url?.absoluteString,
         let dataAvailable = MoviesCache.object(forKey: key) {
         return completion(.success(dataAvailable))
@@ -34,7 +35,7 @@ extension URLSession: SessionHandler {
         return
       }
       
-      if requestType.cache {
+      if requestType.cacheEnabled {
         MoviesCache.add(data: data, key: urlRequest.url?.absoluteString)
       }
       

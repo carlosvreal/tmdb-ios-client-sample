@@ -105,7 +105,7 @@ extension MoviesAPI: RequestableAPI {
     return .get
   }
   
-  var cache: Bool {
+  var cacheEnabled: Bool {
     switch self {
     case .search, .configuration:
       return false

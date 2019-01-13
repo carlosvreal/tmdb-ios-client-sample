@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/carlosvreal/moviesTMDB.svg)](https://travis-ci.org/carlosvreal/moviesTMDB) [![codecov.io](https://codecov.io/gh/codecov/example-swift/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/carlosvreal/moviesTMDB?branch=master)
+[![Build Status](https://travis-ci.org/carlosvreal/moviesTMDB.svg)](https://travis-ci.org/carlosvreal/moviesTMDB) [![codecov.io](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master/graph/badge.svg)](https://codecov.io/gh/carlosvreal/moviesTMDB)
 
-# Code Sample
-Simple iOS client app cosuming RESTful service,
+# Project
+Sample project iOS client consuming TMBD RESTful service.
 
 ### Features:
   * Movies list

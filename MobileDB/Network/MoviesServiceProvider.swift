@@ -31,7 +31,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
     return execute(requestType: requestType)
   }
   
-  private func execute<T>(requestType: RequestableAPI) -> Single<T> where T: Codable {
+  private func execute<T>(requestType: RequestableAPI) -> Single<T> where T: Decodable {
     return Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {

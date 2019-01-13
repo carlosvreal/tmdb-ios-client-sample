@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Movies: Codable {
+struct Movies: Decodable {
   enum CodingKeys: String, CodingKey {
     case page
     case results

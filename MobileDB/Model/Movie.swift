@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SpokenLanguage: Codable {
+struct SpokenLanguage: Decodable {
   enum CodingKeys: String, CodingKey {
     case iso = "iso_639_1"
     case name
@@ -17,7 +17,7 @@ struct SpokenLanguage: Codable {
   let name: String
 }
 
-struct Movie: Codable {
+struct Movie: Decodable {
   let id: Int?
   let title: String?
   let poster: String?

@@ -9,7 +9,6 @@
 import Foundation
 
 extension Dictionary {
-  /// Format url params
   func formatToUrlParams() -> String {
     guard !self.isEmpty else { return "" }
     

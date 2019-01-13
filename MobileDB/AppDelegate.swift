@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
-  let configService = ConfigServiceProvider()
+  private let configService = ConfigServiceProvider()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   private func setupConfig() {
     _ = configService.fetchConfig()
+      .asObservable().take(1).asSingle()
       .subscribe(onSuccess: { baseImageUrl in
         Settings.baseImageUrl = baseImageUrl
       })

@@ -25,11 +25,11 @@ final class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtoco
           guard let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
             let value = json as? [String: Any],
             let images = value["images"] as? [String: Any],
-            let imagesBaseUrl = images["secure_base_url"] as? String else {
+            let secureImageBaseUrl = images["secure_base_url"] as? String else {
               return single(.error(ServiceError.invalidFormatData))
           }
           
-          single(.success(imagesBaseUrl))
+          single(.success(secureImageBaseUrl))
         case .error(let error):
           single(.error(error))
         }

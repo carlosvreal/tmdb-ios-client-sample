@@ -25,7 +25,7 @@ private struct DefaultConfig {
 struct Settings {
   static var baseImageUrl: String {
     set {
-      UserDefaults.standard.setValue(baseImageUrl, forKey: DefaultConfig.baseImageUrlKey)
+      UserDefaults.standard.setValue(newValue, forKey: DefaultConfig.baseImageUrlKey)
     }
     get {
       let urlString = UserDefaults.standard.string(forKey: DefaultConfig.baseImageUrlKey)

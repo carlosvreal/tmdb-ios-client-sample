@@ -28,6 +28,7 @@ final class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    navigationController?.hidesBarsOnSwipe = false
     setupUIBind()
   }
   

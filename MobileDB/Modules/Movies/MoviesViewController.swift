@@ -42,7 +42,6 @@ final class MoviesViewController: UIViewController {
 // MARK: - Extension Search Bar setup
 private extension MoviesViewController {
   func setupSearchBar() {
-    navigationController?.hidesBarsOnSwipe = true
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Movies"
     searchController.isActive = true

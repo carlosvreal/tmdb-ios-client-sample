@@ -3,7 +3,6 @@
 //  MobileDBTests
 //
 //  Created by Carlos Vinicius on 7/31/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import XCTest

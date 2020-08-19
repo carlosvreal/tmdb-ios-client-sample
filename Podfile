@@ -1,19 +1,17 @@
-# Uncomment the next line to define a global platform for your project
-platform :ios, '11.0'
+use_frameworks!
 
 target 'MobileDB' do
   use_frameworks!
 
   # Pods for MobileDB
-  pod 'RxSwift',    '~> 4.0'
-  pod 'RxCocoa',    '~> 4.0'
+  pod 'RxSwift',    '~> 5.0'
+  pod 'RxCocoa',    '~> 5.0'
   pod 'SwiftLint'
-  pod 'RxDataSources', '~> 3.0'
+  pod 'RxDataSources', '~> 4.0'
   
   target 'MobileDBTests' do
     inherit! :search_paths
-    # Pods for testing
-    pod 'RxTest',     '~> 4.0'
-    pod 'RxBlocking', '~> 4.0'
+    pod 'RxTest',     '~> 5.0'
+    pod 'RxBlocking', '~> 5.0'
   end
 end

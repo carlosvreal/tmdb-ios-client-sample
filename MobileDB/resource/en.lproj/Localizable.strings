@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  MobileDB
+
+  Created by Carlos Real on 8/18/20.
+  
+*/
+
+"Something went wrong. Please try again" = "Something went wrong. Please try again";
+"Invalid Movie id" = "Invalid Movie id";
+"No movies found" = "No movies found";
+"Search Movies" = "Search Movies";

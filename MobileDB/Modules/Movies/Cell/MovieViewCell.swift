@@ -9,6 +9,7 @@
 import RxSwift
 
 final class MovieViewCell: UITableViewCell {
+  
   // MARK: - Properties
   @IBOutlet private weak var posterImageView: UIImageView!
   @IBOutlet private weak var title: UILabel!

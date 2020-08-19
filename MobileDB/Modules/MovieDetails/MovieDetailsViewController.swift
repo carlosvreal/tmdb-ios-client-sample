@@ -9,7 +9,9 @@
 import RxSwift
 import RxCocoa
 
-final class MovieDetailsViewController: UIViewController, ReusableIdentifier {
+final class MovieDetailsViewController: UIViewController {
+  
+  // MARK: - Properties
   @IBOutlet private weak var backdropImageView: UIImageView!
   @IBOutlet private weak var titleMovie: UILabel!
   @IBOutlet private weak var releaseYear: UILabel!
@@ -22,40 +24,54 @@ final class MovieDetailsViewController: UIViewController, ReusableIdentifier {
   @IBOutlet private weak var homepageButton: UIButton!
   @IBOutlet private weak var homepageLabel: UIView!
   
-  var viewModel: MovieDetailsViewModel?
+  private var viewModel: MovieDetailsViewModelType?
   private let disposeBag = DisposeBag()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     navigationController?.hidesBarsOnSwipe = false
-    setupUIBind()
+    setupObservable()
   }
   
-  private func setupUIBind() {
-    viewModel?.backdropImage.bind(to: backdropImageView.rx.image).disposed(by: disposeBag)
-    viewModel?.titleMovie.bind(to: titleMovie.rx.text).disposed(by: disposeBag)
-    viewModel?.titleMovie.bind(to: rx.title).disposed(by: disposeBag)
-    viewModel?.releaseYear.bind(to: releaseYear.rx.text).disposed(by: disposeBag)
-    viewModel?.runtime.bind(to: runtime.rx.text).disposed(by: disposeBag)
-    viewModel?.language.bind(to: language.rx.text).disposed(by: disposeBag)
-    viewModel?.descriptionMovie.bind(to: descriptionMovie.rx.text).disposed(by: disposeBag)
-    viewModel?.genres.bind(to: genres.rx.text).disposed(by: disposeBag)
-    viewModel?.revenue.bind(to: revenue.rx.text).disposed(by: disposeBag)
-    viewModel?.ratingScore.bind(to: ratingScore.rx.text).disposed(by: disposeBag)
-    viewModel?.homepage.map { !$0.isEmpty ? $0 : "-" }
-      .bind(to: homepageButton.rx.title(for: .normal)).disposed(by: disposeBag)
+  func setup(viewModel: MovieDetailsViewModelType) {
+    self.viewModel = viewModel
+  }
+}
+
+// MARK: - Observable setup
+private extension MovieDetailsViewController {
+  func setupObservable() {
+    guard let viewModel = viewModel else {
+      assertionFailure("Missing view model")
+      return
+    }
     
-    homepageButton.rx.tap.subscribe(onNext: { [weak self] in
-      guard let linkUrl = self?.homepageButton.titleLabel?.text else { return }
-      self?.openHomepage(with: linkUrl)
-    }).disposed(by: disposeBag)
-    viewModel?.setupData()
+    disposeBag.insert(
+      viewModel.backdropImage.drive(backdropImageView.rx.image),
+      viewModel.titleMovie.drive(titleMovie.rx.text),
+      viewModel.titleMovie.compactMap { $0 }.drive(rx.title),
+      viewModel.releaseYear.drive(releaseYear.rx.text),
+      viewModel.runtime.drive(runtime.rx.text),
+      viewModel.language.drive(language.rx.text),
+      viewModel.descriptionMovie.drive(descriptionMovie.rx.text),
+      viewModel.genres.drive(genres.rx.text),
+      viewModel.revenue.drive(revenue.rx.text),
+      viewModel.ratingScore.drive(ratingScore.rx.text),
+      viewModel.homepage.compactMap { $0 }.map { !$0.isEmpty ? $0 : "-" }
+        .drive(homepageButton.rx.title(for: .normal)),
+      homepageButton.rx.tap.subscribe(onNext: { [weak self] in
+        guard let linkUrl = self?.homepageButton.titleLabel?.text else { return }
+        self?.openHomepage(with: linkUrl)
+      })
+    )
   }
   
   func openHomepage(with link: String) {
     guard let url = URL(string: link) else { return }
-    
     UIApplication.shared.open(url, options: [:], completionHandler: nil)
   }
 }
+
+// MARK: - ReusableIdentifier
+extension MovieDetailsViewController: ReusableIdentifier {}

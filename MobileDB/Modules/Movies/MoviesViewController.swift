@@ -140,7 +140,7 @@ private extension MoviesViewController {
     }
     
     let viewModel = MovieDetailsViewModel(model: model)
-    viewController.viewModel = viewModel
+    viewController.setup(viewModel: viewModel)
     
     navigationController?.pushViewController(viewController, animated: true)
   }

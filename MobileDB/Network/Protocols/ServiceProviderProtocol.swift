@@ -23,6 +23,6 @@ protocol MoviesServiceProtocol {
 
 protocol ConfigServiceProtocol {
   func fetchConfig() -> Single<String>
-  func loadBackdropImage(for path: String) -> Single<UIImage>
-  func loadPoster(for path: String) -> Single<UIImage>
+  func loadBackdropImage(for path: String) -> Single<UIImage?>
+  func loadPoster(for path: String) -> Single<UIImage?>
 }

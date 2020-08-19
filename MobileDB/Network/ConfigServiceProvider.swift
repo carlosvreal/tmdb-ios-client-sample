@@ -39,15 +39,15 @@ final class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtoco
     }
   }
   
-  func loadBackdropImage(for path: String) -> Single<UIImage> {
+  func loadBackdropImage(for path: String) -> Single<UIImage?> {
     return loadImage(for: MoviesAPI.backdropImage(path: path))
   }
   
-  func loadPoster(for path: String) -> Single<UIImage> {
+  func loadPoster(for path: String) -> Single<UIImage?> {
     return loadImage(for: MoviesAPI.posterImage(path: path))
   }
   
-  private func loadImage(for requestType: RequestableAPI) -> Single<UIImage> {
+  private func loadImage(for requestType: RequestableAPI) -> Single<UIImage?> {
     return Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {

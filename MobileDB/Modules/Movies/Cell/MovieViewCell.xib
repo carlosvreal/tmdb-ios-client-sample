@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="175" id="KGk-i7-Jjw" customClass="MovieViewCell" customModule="MobileDB" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="347" height="175"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="253" id="KGk-i7-Jjw" customClass="MovieViewCell" customModule="MobileDB" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="364" height="253"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="347" height="174.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="364" height="253"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yaY-cB-yFf">
-                        <rect key="frame" x="125.5" y="54" width="211.5" height="17"/>
+                        <rect key="frame" x="177" y="93" width="177" height="17"/>
                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
                         <color key="textColor" red="0.25490196079999999" green="0.25098039220000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RbW-6E-qdg">
-                        <rect key="frame" x="125" y="141" width="33" height="16"/>
+                        <rect key="frame" x="177" y="219.33333333333334" width="33" height="16"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                         <color key="textColor" red="0.31676603618421051" green="0.31676603618421051" blue="0.31676603618421051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comedy | Adventure" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="1oR-ub-7jd">
-                        <rect key="frame" x="125" y="81" width="212" height="13.5"/>
+                        <rect key="frame" x="177" y="120" width="177" height="13.333333333333343"/>
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
                         <color key="textColor" red="0.31676603619999999" green="0.31676603619999999" blue="0.31676603619999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubC-ny-EMo">
-                        <rect key="frame" x="307" y="140" width="30" height="17"/>
+                        <rect key="frame" x="324" y="218.66666666666666" width="30" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="ykO-vd-J7O"/>
                         </constraints>
@@ -46,22 +45,22 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star" translatesAutoresizingMaskIntoConstraints="NO" id="Fxq-20-0bP">
-                        <rect key="frame" x="283" y="136" width="25" height="25"/>
+                        <rect key="frame" x="300" y="214.66666666666666" width="25" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="25" id="Cnu-xe-tie"/>
                             <constraint firstAttribute="height" constant="25" id="aua-xX-BXG"/>
                         </constraints>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eUz-nS-03h">
-                        <rect key="frame" x="10" y="11.5" width="100" height="152"/>
+                        <rect key="frame" x="10" y="11" width="152" height="231"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="152" id="UQZ-Vn-fKw"/>
-                            <constraint firstAttribute="width" constant="100" id="mDl-Ij-Tzg"/>
+                            <constraint firstAttribute="width" secondItem="eUz-nS-03h" secondAttribute="height" multiplier="25:38" id="Cde-11-DI8"/>
+                            <constraint firstAttribute="height" priority="999" constant="152" id="UQZ-Vn-fKw"/>
                         </constraints>
                     </imageView>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MQp-2E-nyB">
-                        <rect key="frame" x="50" y="77.5" width="20" height="20"/>
+                        <rect key="frame" x="76" y="116.66666666666667" width="20" height="20.000000000000014"/>
                     </activityIndicatorView>
                 </subviews>
                 <constraints>
@@ -94,10 +93,10 @@
                 <outlet property="releaseYear" destination="RbW-6E-qdg" id="mB3-gc-0O5"/>
                 <outlet property="title" destination="yaY-cB-yFf" id="9jM-7b-YKv"/>
             </connections>
-            <point key="canvasLocation" x="60.5" y="121.5"/>
+            <point key="canvasLocation" x="72.463768115942031" y="146.98660714285714"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="star" width="30" height="30"/>
+        <image name="star" width="29" height="29"/>
     </resources>
 </document>

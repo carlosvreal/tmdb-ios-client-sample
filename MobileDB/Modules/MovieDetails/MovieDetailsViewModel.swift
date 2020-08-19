@@ -83,7 +83,7 @@ private extension MovieDetailsViewModel {
       .loadBackdropImage(for: backdrop)
       .observeOn(MainScheduler.asyncInstance)
       .subscribe(onSuccess: { [weak self] image in
-        self?.backdropImage.onNext(image)
+//        self?.backdropImage.onNext(image)
       })
   }
   

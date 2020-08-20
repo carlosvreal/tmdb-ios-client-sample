@@ -36,3 +36,10 @@ Run `pod install` and launch `MobileDB.xcworkspace`
  4. SwiftLint
  
  Helps to keep track of project standards, delivering a readable, organized and safe code.
+
+## 🚧 WIP
+
+- Support Dark Mode
+- New loading icons 
+- Improves animations
+- Move from RxSwift to Combine

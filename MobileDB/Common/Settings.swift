@@ -22,7 +22,7 @@ private struct DefaultConfig {
 }
 
 struct Settings {
-  static var baseImageUrl: String {
+  static private(set) var baseImageUrl: String {
     set {
       UserDefaults.standard.setValue(newValue, forKey: DefaultConfig.baseImageUrlKey)
     }
@@ -44,5 +44,9 @@ struct Settings {
     }
     
     return appSettings.apiKey
+  }
+  
+  static func updateBaseImageURL(_ imageBaseURL: String) {
+    baseImageUrl = imageBaseURL
   }
 }

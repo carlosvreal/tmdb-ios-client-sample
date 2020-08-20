@@ -14,6 +14,7 @@
 		021907E224EDD7EB006C2C49 /* MovieViewCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021907E124EDD7EB006C2C49 /* MovieViewCellViewModelTests.swift */; };
 		021907E424EDF41B006C2C49 /* MovieDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021907E324EDF41B006C2C49 /* MovieDetailsViewModelTests.swift */; };
 		021907E624EDFDBD006C2C49 /* MoviesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021907E524EDFDBD006C2C49 /* MoviesViewModelTests.swift */; };
+		02F1665224EEA66200355266 /* NotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F1665124EEA66200355266 /* NotificationExtension.swift */; };
 		30E420DBAA786B0833A9E593 /* Pods_MobileDBTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C0678B93EBA613CA2DCDE42 /* Pods_MobileDBTests.framework */; };
 		6703E4442118F69E00811F90 /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6703E4432118F69E00811F90 /* Storyboard.swift */; };
 		6746418F2116971500FD5183 /* ServiceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746418E2116971500FD5183 /* ServiceProviderProtocol.swift */; };
@@ -88,6 +89,7 @@
 		021907E124EDD7EB006C2C49 /* MovieViewCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewCellViewModelTests.swift; sourceTree = "<group>"; };
 		021907E324EDF41B006C2C49 /* MovieDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewModelTests.swift; sourceTree = "<group>"; };
 		021907E524EDFDBD006C2C49 /* MoviesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewModelTests.swift; sourceTree = "<group>"; };
+		02F1665124EEA66200355266 /* NotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtension.swift; sourceTree = "<group>"; };
 		0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C0678B93EBA613CA2DCDE42 /* Pods_MobileDBTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDBTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		338E461EDC8B4319FAAB09F5 /* Pods-MobileDB.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDB.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB.release.xcconfig"; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				674641992116992A00FD5183 /* URLSessionExtension.swift */,
 				67E805682117B75600C9C795 /* UITableViewExtension.swift */,
 				67E5BB2C2118D245003D3679 /* ArrayExtension.swift */,
+				02F1665124EEA66200355266 /* NotificationExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -662,6 +665,7 @@
 				67E5BB272118A4DE003D3679 /* MovieDetailsViewController.swift in Sources */,
 				674641A821171F8700FD5183 /* DeviceSize.swift in Sources */,
 				674641932116984100FD5183 /* ServiceError.swift in Sources */,
+				02F1665224EEA66200355266 /* NotificationExtension.swift in Sources */,
 				674641A42116A72000FD5183 /* ConfigServiceProvider.swift in Sources */,
 				67E8056C2117BC9E00C9C795 /* ReusableIdentifier.swift in Sources */,
 				67D0D05A2117983100A39B51 /* MovieViewCell.swift in Sources */,
@@ -862,7 +866,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.arctouch.MobileDB;
+				PRODUCT_BUNDLE_IDENTIFIER = com.real.MobileDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -883,7 +887,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.arctouch.MobileDB;
+				PRODUCT_BUNDLE_IDENTIFIER = com.real.MobileDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -896,8 +900,8 @@
 			baseConfigurationReference = D848CC9DA61A66EF583059D1 /* Pods-MobileDBTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3N8S6HR6EJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MobileDBTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -906,6 +910,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arctouch.MobileDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MobileDB.app/MobileDB";
@@ -917,8 +923,8 @@
 			baseConfigurationReference = 36CA5800DB188ECB6CDBD711 /* Pods-MobileDBTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3N8S6HR6EJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MobileDBTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -927,6 +933,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arctouch.MobileDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MobileDB.app/MobileDB";

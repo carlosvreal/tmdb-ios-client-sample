@@ -22,4 +22,7 @@ struct Strings {
     static let invalidMovieId = "Invalid Movie id".localized
     static let requestFailed = "Something went wrong. Please try again".localized
   }
+  struct Notification {
+    static let newConfigAvailble = "New imageURL is Available!".localized
+  }
 }

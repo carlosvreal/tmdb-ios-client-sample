@@ -35,6 +35,10 @@ playground.xcworkspace
 # Packages/
 .build/
 
+# CocoaPods
+#
+Pods/
+
 ## Other
 *.xccheckout
 *.xcscmblueprint

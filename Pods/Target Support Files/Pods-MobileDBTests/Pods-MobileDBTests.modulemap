@@ -1,6 +1,0 @@
-framework module Pods_MobileDBTests {
-  umbrella header "Pods-MobileDBTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -15,6 +15,7 @@
 		021907E424EDF41B006C2C49 /* MovieDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021907E324EDF41B006C2C49 /* MovieDetailsViewModelTests.swift */; };
 		021907E624EDFDBD006C2C49 /* MoviesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021907E524EDFDBD006C2C49 /* MoviesViewModelTests.swift */; };
 		02F1665224EEA66200355266 /* NotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F1665124EEA66200355266 /* NotificationExtension.swift */; };
+		02F1665424EEB45A00355266 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F1665324EEB45A00355266 /* NotificationHandler.swift */; };
 		30E420DBAA786B0833A9E593 /* Pods_MobileDBTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C0678B93EBA613CA2DCDE42 /* Pods_MobileDBTests.framework */; };
 		6703E4442118F69E00811F90 /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6703E4432118F69E00811F90 /* Storyboard.swift */; };
 		6746418F2116971500FD5183 /* ServiceProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746418E2116971500FD5183 /* ServiceProviderProtocol.swift */; };
@@ -89,6 +90,7 @@
 		021907E324EDF41B006C2C49 /* MovieDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewModelTests.swift; sourceTree = "<group>"; };
 		021907E524EDFDBD006C2C49 /* MoviesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewModelTests.swift; sourceTree = "<group>"; };
 		02F1665124EEA66200355266 /* NotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtension.swift; sourceTree = "<group>"; };
+		02F1665324EEB45A00355266 /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
 		0B66FCDE15C64E6F21BB8A51 /* Pods_MobileDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C0678B93EBA613CA2DCDE42 /* Pods_MobileDBTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileDBTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		338E461EDC8B4319FAAB09F5 /* Pods-MobileDB.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileDB.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileDB/Pods-MobileDB.release.xcconfig"; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 			children = (
 				674641A721171F8700FD5183 /* DeviceSize.swift */,
 				674641A12116A62D00FD5183 /* ImageSize.swift */,
+				02F1665324EEB45A00355266 /* NotificationHandler.swift */,
 				67E8056B2117BC9E00C9C795 /* ReusableIdentifier.swift */,
 				67A0B52F2115ED3400C8C82C /* Settings.swift */,
 				6703E4432118F69E00811F90 /* Storyboard.swift */,
@@ -670,6 +673,7 @@
 				675276A621114645001FB501 /* AppDelegate.swift in Sources */,
 				021907D724ECC5DE006C2C49 /* Strings.swift in Sources */,
 				6746419C21169B2800FD5183 /* MoviesServiceProvider.swift in Sources */,
+				02F1665424EEB45A00355266 /* NotificationHandler.swift in Sources */,
 				6746419E2116A22C00FD5183 /* Movies.swift in Sources */,
 				677898B821178CBE00B7B532 /* MoviesViewModel.swift in Sources */,
 				67464198211698E400FD5183 /* Genre.swift in Sources */,

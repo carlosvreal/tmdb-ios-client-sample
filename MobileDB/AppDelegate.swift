@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   private let configService = ConfigServiceProvider()
   private let disposeBag = DisposeBag()
+  private let notificationHandler = NotificationHandler()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -26,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                   if let task = task as? BGAppRefreshTask {
                     self?.fetchConfig(task: task)
                   }
-    }
+      }
     
     return true
   }
@@ -56,7 +57,7 @@ private extension AppDelegate {
         Settings.updateBaseImageURL(baseImageUrl)
       })
       .subscribe(onSuccess: { [weak self] baseImageUrl in
-        self?.sendNotitication(with: baseImageUrl)
+        self?.notificationHandler.sendNotificationUpdatingImageURL()
         
         task.setTaskCompleted(success: true)
         
@@ -74,12 +75,5 @@ private extension AppDelegate {
     } catch {
       print("Not able to submit task")
     }
-  }
-  
-  func sendNotitication(with imageURL: String) {
-    let userInfo: [String: Any] = [Strings.Notification.newConfigAvailble: imageURL]
-    NotificationCenter.default.post(name: .fetchConfig,
-                                    object: self,
-                                    userInfo: userInfo)
   }
 }

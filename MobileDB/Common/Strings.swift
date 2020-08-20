@@ -23,6 +23,7 @@ struct Strings {
     static let requestFailed = "Something went wrong. Please try again".localized
   }
   struct Notification {
-    static let newConfigAvailble = "New imageURL is Available!".localized
+    static let title = "Your configs were updated".localized
+    static let body = "Check it out new movies!".localized
   }
 }

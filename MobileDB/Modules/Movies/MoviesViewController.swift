@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import UserNotifications
 
 final class MoviesViewController: UIViewController {
   
@@ -25,6 +26,7 @@ final class MoviesViewController: UIViewController {
   private let viewModel = MoviesViewModel()
   private let searchController = UISearchController(searchResultsController: nil)
   private let viewDidLoadSubject = PublishSubject<Void>()
+  private let notificationHandler = NotificationHandler()
   
   // MARK: - Overriden functions
   override func viewDidLoad() {
@@ -33,6 +35,7 @@ final class MoviesViewController: UIViewController {
     setupSearchBar()
     setupTableViewBinds()
     setupObservables()
+    notificationHandler.requestPermission()
     
     viewDidLoadSubject.onNext(())
   }
@@ -142,5 +145,9 @@ private extension MoviesViewController {
     viewController.setup(viewModel: viewModel)
     
     navigationController?.pushViewController(viewController, animated: true)
+  }
+  
+  func requestNotificationPermission() {
+    
   }
 }

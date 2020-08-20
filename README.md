@@ -1,4 +1,7 @@
-[![Build Status](https://travis-ci.org/carlosvreal/moviesTMDB.svg)](https://travis-ci.org/carlosvreal/moviesTMDB) [![codecov.io](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master/graph/badge.svg)](https://codecov.io/gh/carlosvreal/moviesTMDB)
+[![Build Status](https://travis-ci.org/carlosvreal/moviesTMDB.svg)](https://travis-ci.org/carlosvreal/moviesTMDB) 
+[![codecov.io](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master/graph/badge.svg)](https://codecov.io/gh/carlosvreal/moviesTMDB)
+
+[![codecov](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master/graph/sunburst.svg)](https://codecov.io/gh/carlosvreal/moviesTMDB/branch/master)
 
 # Project
 Sample project iOS client consuming TMBD RESTful service.

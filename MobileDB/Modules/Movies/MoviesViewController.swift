@@ -49,10 +49,10 @@ final class MoviesViewController: UIViewController {
 // MARK: - Extension Search Bar setup
 private extension MoviesViewController {
   func setupSearchBar() {
+    navigationItem.searchController = searchController
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = Strings.Home.searchTitle
     searchController.isActive = true
-    navigationItem.searchController = searchController
     definesPresentationContext = true
   }
 }

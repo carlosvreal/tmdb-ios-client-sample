@@ -31,7 +31,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
   }
   
   private func execute<T>(requestType: RequestableAPI) -> Single<T> where T: Decodable {
-    return Single.create { [weak self] single in
+    Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {
         case .success(let data):
@@ -51,10 +51,8 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
   }
   
   func genres() -> Single<[Genre]> {
-    let requestType = MoviesAPI.genres
-    
-    return Single.create { [weak self] single in
-      self?.session.executeRequest(with: requestType) { result in
+    Single.create { [weak self] single in
+      self?.session.executeRequest(with: MoviesAPI.genres) { result in
         switch result {
         case .success(let data):
           do {
@@ -62,7 +60,7 @@ final class MoviesServiceProvider: ServiceProviderProtocol, MoviesServiceProtoco
             single(.success(decodedData.genres))
           } catch {
             single(.error(ServiceError.invalidFormatData))
-          }
+        }
         case .error(let error):
           single(.error(error))
         }

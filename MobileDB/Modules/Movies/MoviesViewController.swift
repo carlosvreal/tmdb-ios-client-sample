@@ -133,7 +133,7 @@ private extension MoviesViewController {
 private extension MoviesViewController {
   func presentMovieDetail(with model: MovieViewData) {
     let identifier = MovieDetailsViewController.identifier
-    guard let viewController = Storyboard.movieDetail.viewController(identifier) as? MovieDetailsViewController else {
+    guard let viewController = Storyboard.movieDetails.viewController(identifier) as? MovieDetailsViewController else {
       assertionFailure("MoviesViewController ViewController not found")
       return
     }

@@ -11,6 +11,7 @@ import RxCocoa
 protocol MovieDetailsViewModelType {
   var backdropImage: Driver<UIImage?> { get }
   var titleMovie: Driver<String?> { get }
+  var screenTitle: Driver<String> { get }
   var releaseYear: Driver<String?> { get }
   var runtime: Driver<String?> { get }
   var language: Driver<String?> { get }
@@ -19,6 +20,9 @@ protocol MovieDetailsViewModelType {
   var genres: Driver<String?> { get }
   var revenue: Driver<String?> { get }
   var homepage: Driver<String?> { get }
+  var openHomePage: Driver<String> { get }
+  
+  func bindHomePage(to observable: Observable<Void>) -> Disposable
 }
 
 struct MovieDetailsViewModel {
@@ -26,6 +30,7 @@ struct MovieDetailsViewModel {
   private let model: MovieViewData
   private let service: ConfigServiceProtocol
   private let disposeBag = DisposeBag()
+  private let openHomePageSubject = PublishSubject<String>()
   
   init(model: MovieViewData, service: ConfigServiceProtocol = ConfigServiceProvider()) {
     self.model = model
@@ -35,9 +40,13 @@ struct MovieDetailsViewModel {
 
 // MARK: - MovieDetailsViewModelType
 extension MovieDetailsViewModel: MovieDetailsViewModelType {
-  
   var titleMovie: Driver<String?> {
     .just(model.title)
+  }
+  var screenTitle: Driver<String> {
+    Observable.just(model.title)
+      .compactMap { $0}
+      .asDriver(onErrorJustReturn: "")
   }
   var releaseYear: Driver<String?> {
     let year = model.releaseYear?.split(separator: "-").first ?? "-"
@@ -66,7 +75,8 @@ extension MovieDetailsViewModel: MovieDetailsViewModelType {
     return .just(revenue)
   }
   var homepage: Driver<String?> {
-    .just(model.homepageLink)
+    let homepage = model.homepageLink.map { !$0.isEmpty ? $0 : "-" }
+    return .just(homepage)
   }
   var backdropImage: Driver<UIImage?> {
     Observable.just(model.backdropImagePath)
@@ -76,6 +86,15 @@ extension MovieDetailsViewModel: MovieDetailsViewModelType {
           .loadBackdropImage(for: $0)
       }
       .asDriver(onErrorJustReturn: nil)
+  }
+  var openHomePage: Driver<String> {
+    openHomePageSubject.asDriver(onErrorJustReturn: "")
+  }
+  
+  func bindHomePage(to observable: Observable<Void>) -> Disposable {
+    observable
+      .compactMap { self.model.homepageLink }
+      .bind(to: openHomePageSubject)
   }
 }
 

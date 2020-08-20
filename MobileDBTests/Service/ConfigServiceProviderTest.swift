@@ -29,13 +29,9 @@ class ConfigServiceProviderTest: XCTestCase {
     super.tearDown()
   }
   
-  // MARK: Configuration
-  
   func testValid_MovieList() {
-    let bundleTest = Bundle(for: type(of: self))
-    
     // given
-    let configData = StubData.configData(bundle: bundleTest)
+    let configData = StubData.configData()
     let stubResponse = Result.success(configData)
     session.mockDataResponse = MockDataResponse(response: stubResponse)
     

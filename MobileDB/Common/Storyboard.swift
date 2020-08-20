@@ -9,13 +9,13 @@ import UIKit
 
 enum Storyboard: String {
   case movies = "Movies"
-  case movieDetail = "MovieDetails"
+  case movieDetails = "MovieDetails"
   
   var storyboard: UIStoryboard {
-    return UIStoryboard(name: rawValue, bundle: nil)
+    UIStoryboard(name: rawValue, bundle: nil)
   }
   
   func viewController(_ identifier: String) -> UIViewController? {
-    return storyboard.instantiateViewController(withIdentifier: identifier)
+    storyboard.instantiateViewController(withIdentifier: identifier)
   }
 }

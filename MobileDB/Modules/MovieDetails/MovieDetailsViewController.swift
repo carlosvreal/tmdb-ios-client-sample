@@ -26,6 +26,7 @@ final class MovieDetailsViewController: UIViewController {
   private var viewModel: MovieDetailsViewModelType?
   private let disposeBag = DisposeBag()
   
+  // MARK: - Overriden functions
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -33,6 +34,7 @@ final class MovieDetailsViewController: UIViewController {
     setupObservable()
   }
   
+  // MARK: - Public functions
   func setup(viewModel: MovieDetailsViewModelType) {
     self.viewModel = viewModel
   }
@@ -49,7 +51,7 @@ private extension MovieDetailsViewController {
     disposeBag.insert(
       viewModel.backdropImage.drive(backdropImageView.rx.image),
       viewModel.titleMovie.drive(titleMovie.rx.text),
-      viewModel.titleMovie.compactMap { $0 }.drive(rx.title),
+      viewModel.screenTitle.drive(rx.title),
       viewModel.releaseYear.drive(releaseYear.rx.text),
       viewModel.runtime.drive(runtime.rx.text),
       viewModel.language.drive(language.rx.text),
@@ -57,12 +59,12 @@ private extension MovieDetailsViewController {
       viewModel.genres.drive(genres.rx.text),
       viewModel.revenue.drive(revenue.rx.text),
       viewModel.ratingScore.drive(ratingScore.rx.text),
-      viewModel.homepage.compactMap { $0 }.map { !$0.isEmpty ? $0 : "-" }
-        .drive(homepageButton.rx.title(for: .normal)),
-      homepageButton.rx.tap.subscribe(onNext: { [weak self] in
-        guard let linkUrl = self?.homepageButton.titleLabel?.text else { return }
-        self?.openHomepage(with: linkUrl)
-      })
+      viewModel.homepage.drive(homepageButton.rx.title(for: .normal)),
+      viewModel.openHomePage.drive(onNext: { [weak self] in
+        self?.openHomepage(with: $0)
+      }),
+      
+      viewModel.bindHomePage(to: homepageButton.rx.tap.asObservable())
     )
   }
   

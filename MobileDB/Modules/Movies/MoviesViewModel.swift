@@ -60,13 +60,21 @@ extension MoviesViewModel: MoviesViewModelType {
   }
   
   func bindLoadFirstPage(to observable: Observable<Void>) -> Disposable {
-    observable
-      .do(onNext: { _ in
-        self.page.accept(1)
-        self.dataSourceRelay.accept([])
-      })
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+
+    let requestMovies = shared
       .flatMapLatest { self.requestMovies() }
       .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource)
   }
   
   func bindLoadNextPage(to observable: Observable<Void>) -> Disposable {
@@ -80,39 +88,78 @@ extension MoviesViewModel: MoviesViewModelType {
       .do(onNext: { _ in self.isLoadingDataSubject.onNext(true) })
       .compactMap { $0.id }
       .map { String(describing: $0) }
-      .flatMapLatest { self.loadMovieDetail(with: $0) }
+      .flatMapLatest {
+        self.loadMovieDetail(with: $0)
+          .catchError { _ -> Observable<MovieViewData> in
+            self.isLoadingDataSubject.onNext(false)
+            self.errorMessageSubject.onNext(Copies.requestFailed)
+            return .empty()
+          }
+      }
+      .do(onNext: { _ in self.isLoadingDataSubject.onNext(false) })
       .bind(to: didReceiveMovieDetailSubject)
   }
   
   func bindSearchMovies(to observable: Observable<String>) -> Disposable {
-    observable
-      .do(onNext: { _ in
-        self.page.accept(1)
-        self.isSortedByPopularity.accept(false)
-        self.dataSourceRelay.accept([])
-      })
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { _ in 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { _ in [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { _ in false }
+      .bind(to: isSortedByPopularity)
+    
+    let requestMovies = shared
       .flatMapLatest { self.requestMovies(query: $0) }
       .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource, sortByPopularity)
   }
   
   func bindResetData(to observable: Observable<Void>) -> Disposable {
-    observable
-      .subscribe(onNext: { _ in
-        self.page.accept(1)
-        self.isSortedByPopularity.accept(true)
-        self.dataSourceRelay.accept([])
-      })
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { true }
+      .bind(to: isSortedByPopularity)
+
+    return Disposables.create(resetPage, resetDataSource, sortByPopularity)
   }
   
   func bindRefresh(to observable: Observable<Void>) -> Disposable {
-    observable
-      .do(onNext: { _ in
-        self.page.accept(1)
-        self.isSortedByPopularity.accept(true)
-        self.dataSourceRelay.accept([])
-      })
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { true }
+      .bind(to: isSortedByPopularity)
+    
+    let requestMovies = shared
       .flatMapLatest { self.requestMovies() }
       .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource, sortByPopularity)
   }
 }
 
@@ -137,11 +184,6 @@ private extension MoviesViewModel {
                                      language: movie.spokenLanguage?.first?.name)
       }
       .compactMap { $0 }
-      .do(onNext: { _ in self.isLoadingDataSubject.onNext(false) })
-      .do(onError: { _ in
-        self.isLoadingDataSubject.onNext(false)
-        self.errorMessageSubject.onNext(Copies.requestFailed)
-      })
   }
 }
 
@@ -182,7 +224,6 @@ private extension MoviesViewModel {
         return .empty()
       }
       .do(onNext: { _ in self.isLoadingDataSubject.onNext(false) })
-      .do(onDispose: { self.isLoadingDataSubject.onNext(false) })
   }
 }
 

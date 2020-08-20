@@ -11,7 +11,7 @@ import RxSwift
 import RxBlocking
 
 extension BlockingObservable {
-  func firstOrNil() -> E? {
+  func firstOrNil() -> Element? {
     do {
       return try first()
     } catch {
@@ -19,7 +19,7 @@ extension BlockingObservable {
     }
   }
   
-  func toArrayOrNil() -> [E]? {
+  func toArrayOrNil() -> [Element]? {
     do {
       return try toArray()
     } catch {
@@ -58,7 +58,7 @@ extension BlockingObservable {
 }
 
 extension TestableObserver {
-  func eventElements() -> [ElementType] {
+  func eventElements() -> [Element] {
     return events.map { $0.value.element! }
   }
 }

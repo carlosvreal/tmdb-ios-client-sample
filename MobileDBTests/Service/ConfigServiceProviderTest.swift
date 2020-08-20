@@ -3,7 +3,6 @@
 //  MobileDBTests
 //
 //  Created by Carlos Vinicius on 8/05/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 @testable import MobileDB
@@ -30,13 +29,9 @@ class ConfigServiceProviderTest: XCTestCase {
     super.tearDown()
   }
   
-  // MARK: Configuration
-  
   func testValid_MovieList() {
-    let bundleTest = Bundle(for: type(of: self))
-    
     // given
-    let configData = StubData.configData(bundle: bundleTest)
+    let configData = StubData.configData()
     let stubResponse = Result.success(configData)
     session.mockDataResponse = MockDataResponse(response: stubResponse)
     

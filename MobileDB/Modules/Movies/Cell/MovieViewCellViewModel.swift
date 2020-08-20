@@ -7,59 +7,69 @@
 //
 
 import RxSwift
+import RxCocoa
 
-final class MovieViewCellViewModel {
-  let title = PublishSubject<String?>()
-  let releaseYear = PublishSubject<String>()
-  let genres = PublishSubject<String>()
-  let posterImage = PublishSubject<UIImage>()
-  let popularity = PublishSubject<String>()
-  let loadingImage = BehaviorSubject(value: false)
-  
-  private var model: MovieViewData?
+protocol MovieViewCellViewModelType {
+  var title: Driver<String?> { get }
+  var releaseYear: Driver<String?> { get }
+  var genres: Driver<String?> { get }
+  var posterImage: Driver<UIImage?> { get }
+  var popularity: Driver<String?> { get }
+  var loadingImage: Driver<Bool> { get }
+}
+
+struct MovieViewCellViewModel {
+
+  private var model: MovieViewData
+  private let loadingImageSubject = PublishSubject<Bool>()
   private let service: ConfigServiceProtocol
-  private var disposeBag = DisposeBag()
   
-  init(service: ConfigServiceProtocol) {
+  init(model: MovieViewData, service: ConfigServiceProtocol) {
     self.service = service
-  }
-  
-  func willDisplayCell() {
-    loadPosterImage()
-  }
-  
-  func willReuseCell() {
-    disposeBag = DisposeBag()
-  }
-  
-  func setupData(with model: MovieViewData) {
     self.model = model
-    
-    title.onNext(model.title)
-    
-    if let releaseYear = model.releaseYear,
-      let year = releaseYear.split(separator: "-").first {
-      self.releaseYear.onNext(String(year))
-    }
-    
-    if let ratingScore = model.ratingScore {
-      let rating = String(format: "%.1f", ratingScore)
-      popularity.onNext(rating)
-    }
-    
-    if let genres = model.genres {
-      self.genres.onNext(genres.formatGenresAsString())
-    }
   }
-
-  private func loadPosterImage() {
-    guard let model = model, let imagePath = model.posterImagePath else { return }
-
-    loadingImage.onNext(true)
-    service.loadPoster(for: imagePath)
-      .subscribe(onSuccess: { [unowned self] image in
-        self.loadingImage.onNext(false)
-        self.posterImage.onNext(image)
-      }).disposed(by: disposeBag)
+}
+  
+// MARK: - MovieViewCellViewModelType
+extension MovieViewCellViewModel: MovieViewCellViewModelType {
+  var title: Driver<String?> {
+    .just(model.title)
+  }
+  
+  var releaseYear: Driver<String?> {
+    let year = model.releaseYear?.split(separator: "-").first ?? "-"
+    return .just(String(year))
+  }
+  
+  var genres: Driver<String?> {
+    .just(model.genres?.formatGenresAsString())
+  }
+  
+  var popularity: Driver<String?> {
+    guard let ratingScore = model.ratingScore else {
+      return .just(nil)
+    }
+    
+    let rating = String(format: "%.1f", ratingScore)
+    return .just(rating)
+  }
+  
+  var loadingImage: Driver<Bool> {
+    loadingImageSubject.asDriver(onErrorJustReturn: false)
+  }
+  
+  var posterImage: Driver<UIImage?> {
+    Observable.just(model.posterImagePath)
+      .do(onNext: { _ in self.loadingImageSubject.onNext(true) })
+      .compactMap { $0 }
+      .flatMapLatest {
+        self.service
+          .loadPoster(for: $0)
+          .catchError { _ in
+            return .just(nil)
+          }
+      }
+      .do(onNext: { _ in self.loadingImageSubject.onNext(false) })
+      .asDriver(onErrorJustReturn: nil)
   }
 }

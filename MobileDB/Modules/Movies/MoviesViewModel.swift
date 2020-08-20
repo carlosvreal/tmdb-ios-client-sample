@@ -3,143 +3,191 @@
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/05/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import RxSwift
 import RxCocoa
 
-private struct MoviesViewModelConstants {
-  static let messageEmptySearch = "No movies found"
-  static let invalidMovieId = "Invalid Movie id"
-  static let requestFailed = "Something went wrong. Please try again"
+protocol MoviesViewModelType {
+  var dataSource: Driver<[MovieViewData]> { get }
+  var movieDetail: Driver<MovieViewData> { get }
+  var isLoadingData: Driver<Bool> { get }
+  var errorMessage: Driver<String?> { get }
+  
+  func bindLoadFirstPage(to observable: Observable<Void>) -> Disposable
+  func bindLoadNextPage(to observable: Observable<Void>) -> Disposable
+  func bindSearchMovies(to observable: Observable<String>) -> Disposable
+  func bindLoadMovieDetail(to observable: Observable<MovieViewData>) -> Disposable
+  func bindResetData(to observable: Observable<Void>) -> Disposable
+  func bindRefresh(to observable: Observable<Void>) -> Disposable
 }
 
-final class MoviesViewModel {
-  var moviesDataSource: Driver<[MovieViewData]> {
-    return dataSource.asDriver()
-  }
+struct MoviesViewModel {
+  private typealias Copies = Strings.Error
   
-  let refresh = PublishSubject<Void>()
-  let nextPage = PublishSubject<Void>()
-  let willSearchMovieDetail = PublishSubject<String>()
-  let errorMessage = PublishSubject<String>()
-  let isLoadingData = PublishSubject<Bool>()
-  let didReceiveMovieDetail = PublishSubject<MovieViewData>()
-  let searchMovieQuery = BehaviorSubject<String?>(value: nil)
-  let willCleanSearchResult = PublishSubject<Void>()
-  let willCancelSearch = PublishSubject<Void>()
+  private let errorMessageSubject = PublishSubject<String?>()
+  private let isLoadingDataSubject = PublishSubject<Bool>()
+  private let didReceiveMovieDetailSubject = PublishSubject<MovieViewData>()
+  private let searchMovieQuery = BehaviorSubject<String?>(value: nil)
   
-  private let dataSource = BehaviorRelay<[MovieViewData]>(value: [])
-  private var page = 1
+  private let dataSourceRelay = BehaviorRelay<[MovieViewData]>(value: [])
+  private var page = BehaviorRelay(value: 1)
+  private var isSortedByPopularity = BehaviorRelay(value: true)
   private let service: MoviesServiceProtocol
-  private let disposeBag = DisposeBag()
   private let scheduler: SchedulerType
-  private var requestDispossble: Disposable? {
-    didSet {
-      oldValue?.dispose()
-      requestDispossble?.disposed(by: disposeBag)
-    }
-  }
   
   init(service: MoviesServiceProtocol = MoviesServiceProvider(),
        scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .background)) {
-    
     self.service = service
     self.scheduler = scheduler
-    
-    setupServiceCalls()
-    setupMovieDetail()
+  }
+}
+
+// MARK: - MoviesViewModelType
+extension MoviesViewModel: MoviesViewModelType {
+  
+  var dataSource: Driver<[MovieViewData]> {
+    dataSourceRelay.asDriver()
+  }
+  var movieDetail: Driver<MovieViewData> {
+    didReceiveMovieDetailSubject.asDriver(onErrorDriveWith: .empty())
+  }
+  var isLoadingData: Driver<Bool> {
+    isLoadingDataSubject.asDriver(onErrorJustReturn: false)
+  }
+  var errorMessage: Driver<String?> {
+    errorMessageSubject.asDriver(onErrorJustReturn: nil)
   }
   
-  func loadMoviesList() {
-    requestMovies()
+  func bindLoadFirstPage(to observable: Observable<Void>) -> Disposable {
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+
+    let requestMovies = shared
+      .flatMapLatest { self.requestMovies() }
+      .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource)
+  }
+  
+  func bindLoadNextPage(to observable: Observable<Void>) -> Disposable {
+    observable
+      .flatMapLatest { self.requestMovies() }
+      .bind(to: dataSourceRelay)
+  }
+  
+  func bindLoadMovieDetail(to observable: Observable<MovieViewData>) -> Disposable {
+    observable
+      .do(onNext: { _ in self.isLoadingDataSubject.onNext(true) })
+      .compactMap { $0.id }
+      .map { String(describing: $0) }
+      .flatMapLatest {
+        self.loadMovieDetail(with: $0)
+          .catchError { _ -> Observable<MovieViewData> in
+            self.isLoadingDataSubject.onNext(false)
+            self.errorMessageSubject.onNext(Copies.requestFailed)
+            return .empty()
+          }
+      }
+      .do(onNext: { _ in self.isLoadingDataSubject.onNext(false) })
+      .bind(to: didReceiveMovieDetailSubject)
+  }
+  
+  func bindSearchMovies(to observable: Observable<String>) -> Disposable {
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { _ in 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { _ in [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { _ in false }
+      .bind(to: isSortedByPopularity)
+    
+    let requestMovies = shared
+      .flatMapLatest { self.requestMovies(query: $0) }
+      .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource, sortByPopularity)
+  }
+  
+  func bindResetData(to observable: Observable<Void>) -> Disposable {
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { true }
+      .bind(to: isSortedByPopularity)
+
+    return Disposables.create(resetPage, resetDataSource, sortByPopularity)
+  }
+  
+  func bindRefresh(to observable: Observable<Void>) -> Disposable {
+    let shared = observable.share()
+    
+    let resetPage = shared
+      .map { 1 }
+      .bind(to: page)
+    
+    let resetDataSource = shared
+      .map { [] }
+      .bind(to: dataSourceRelay)
+    
+    let sortByPopularity = shared
+      .map { true }
+      .bind(to: isSortedByPopularity)
+    
+    let requestMovies = shared
+      .flatMapLatest { self.requestMovies() }
+      .bind(to: dataSourceRelay)
+    
+    return Disposables.create(resetPage, requestMovies, resetDataSource, sortByPopularity)
   }
 }
 
 // MARK: - Setup observables
-
 private extension MoviesViewModel {
-  func requestMovies(query: String? = nil) {
-    requestDispossble = nil
-    requestDispossble = nextPage.startWith(())
-      .flatMapLatest { [weak self] page -> Observable<[MovieViewData]> in
-        guard let strongSelf = self else { return .just([]) }
-        return strongSelf.loadMovies(by: query, from: strongSelf.page)
-          .do(onNext: { [weak self] _ in
-            self?.page += 1
-          })
-      }.bind(to: dataSource)
-  }
-  
-  func setupServiceCalls() {
-    // Refresh
-    refresh
-      .skip(1)
-      .subscribe(onNext: { [unowned self] _ in
-        self.page = 1
-        self.dataSource.accept([])
-        self.requestMovies()
-      }).disposed(by: disposeBag)
-    
-    // Cancel search
-    willCancelSearch.subscribe(onNext: { [unowned self] _ in
-      self.page = 1
-      self.dataSource.accept([])
-      self.requestMovies()
-    }).disposed(by: disposeBag)
-    
-    willCleanSearchResult
-      .skip(1)
-      .subscribe(onNext: { [unowned self] in
-        self.page = 1
-        self.dataSource.accept([])
-      }).disposed(by: disposeBag)
-    
-    // Search
-    searchMovieQuery
-      .flatMap { Observable.from(optional: $0) }
-      .filter { !$0.isEmpty }
-      .debounce(0.3, scheduler: MainScheduler.asyncInstance)
-      .subscribe(onNext: { [unowned self] query in
-        self.page = 1
-        self.dataSource.accept([])
-        self.requestMovies(query: query)
-      }).disposed(by: disposeBag)
-  }
-}
-
-// MARK: - Movie Detail data
-
-private extension MoviesViewModel {
-  func setupMovieDetail() {
-    // Load movie detail
-    willSearchMovieDetail
-      .flatMap { [unowned self] id -> Observable<MovieViewData> in
-        return self.loadMovieDetail(with: id)
-      }.bind(to: didReceiveMovieDetail)
-      .disposed(by: disposeBag)
+  func requestMovies(query: String? = nil) -> Single<[MovieViewData]> {
+    loadMovies(by: query, from: self.page.value)
+      .do(onNext: { _ in
+        let nextPage = self.page.value + 1
+        self.page.accept(nextPage)
+      })
+      .take(1)
+      .asSingle()
   }
   
   func loadMovieDetail(with identifier: String) -> Observable<MovieViewData> {
-    isLoadingData.onNext(true)
-    return service.fetchMovieDetail(with: identifier).asObservable()
-      .map { [weak self] movie -> MovieViewData? in
-        return self?.mapMovieToMovieViewData(movie: movie,
-                                             genres: movie.genres,
-                                             language: movie.spokenLanguage?.first?.name)
-      }.flatMap { Observable.from(optional: $0) }
-      .do(onNext: { [weak self] _ in
-        self?.isLoadingData.onNext(false)
-        }, onError: { [weak self] error in
-          self?.isLoadingData.onNext(false)
-          self?.errorMessage.onNext(error.localizedDescription)
-      })
+    service
+      .fetchMovieDetail(with: identifier).asObservable()
+      .map { movie -> MovieViewData? in
+        self.mapMovieToMovieViewData(movie: movie,
+                                     genres: movie.genres,
+                                     language: movie.spokenLanguage?.first?.name)
+      }
+      .compactMap { $0 }
   }
 }
 
 // MARK: - Load movies content
-
 private extension MoviesViewModel {
   func loadMovies(by query: String? = nil, from page: Int) -> Observable<[MovieViewData]> {
     let genres = service.genres().asObservable()
@@ -153,64 +201,60 @@ private extension MoviesViewModel {
     
     return loadMovies(moviesObservable, genres: genres)
   }
-}
-
-// MARK: - Execute movies fetch
-
-private extension MoviesViewModel {
+  
   func loadMovies(_ movies: Observable<Movies>, genres: Observable<[Genre]>) -> Observable<[MovieViewData]> {
-    isLoadingData.onNext(true)
-    
-    return Observable.zip(movies, genres) { ($0, $1) }
-      .filter { self.page <= $0.0.totalPages }
-      .map { [weak self] (movies, genres) -> [MovieViewData] in
-        guard let strongSelf = self else { return [] }
-        return strongSelf.mapMoviesGenresToMovieViewData(movies: movies, genres: genres)
-      }.scan(dataSource.value) { (currentMovies, newMovies) -> [MovieViewData] in
+    Observable.zip(movies, genres)
+      .do(onNext: { _ in self.isLoadingDataSubject.onNext(true) })
+      .filter { self.page.value <= $0.0.totalPages }
+      .map { self.mapMoviesGenresToMovieViewData(movies: $0.0, genres: $0.1) }
+      .scan(dataSourceRelay.value) { currentMovies, newMovies -> [MovieViewData] in
+        guard self.isSortedByPopularity.value else {
+          return currentMovies + newMovies
+        }
+        
         let sortedList = (currentMovies + newMovies)
           .sorted(by: { (movieA, movieB) -> Bool in
             return movieA.popularity > movieB.popularity
           })
         return sortedList
-      }.do(onNext: { [weak self] _ in
-        self?.isLoadingData.onNext(false)
-        }, onError: { [weak self] _ in
-          self?.isLoadingData.onNext(false)
-          self?.errorMessage.onNext(MoviesViewModelConstants.requestFailed)
-      }, onDispose: { [weak self] in
-        self?.isLoadingData.onNext(false)
-    })
+      }
+      .catchError { _ -> Observable<[MovieViewData]> in
+        self.isLoadingDataSubject.onNext(false)
+        self.errorMessageSubject.onNext(Copies.requestFailed)
+        return .empty()
+      }
+      .do(onNext: { _ in self.isLoadingDataSubject.onNext(false) })
   }
 }
 
 // MARK: - Utility map methods
-
 private extension MoviesViewModel {
   func mapMoviesGenresToMovieViewData(movies: Movies, genres: [Genre]) -> [MovieViewData] {
-    return movies.results.map { [weak self] movie -> MovieViewData? in
-      let movieGenres = movie.genreIds?.map { id -> Genre? in
-        return genres.first(where: { $0.id == id })
-        }.compactMap { $0 }
-      
-      return self?.mapMovieToMovieViewData(movie: movie,
-                                           genres: movieGenres,
-                                           language: movie.originalLanguage)
-      }.compactMap { $0 }
+    movies
+      .results
+      .map { movie -> MovieViewData? in
+        let movieGenres = movie.genreIds?.compactMap { id in genres.first(where: { $0.id == id }) }
+        
+        return self.mapMovieToMovieViewData(movie: movie,
+                                            genres: movieGenres,
+                                            language: movie.originalLanguage)
+    }
+    .compactMap { $0 }
   }
   
   func mapMovieToMovieViewData(movie: Movie, genres: [Genre]?, language: String?) -> MovieViewData? {
-    return MovieViewData(id: movie.id,
-                         title: movie.title,
-                         posterImagePath: movie.posterPath,
-                         backdropImagePath: movie.backdropPath,
-                         ratingScore: movie.rating,
-                         releaseYear: movie.releaseDate,
-                         genres: genres,
-                         revenue: movie.revenue,
-                         description: movie.overview,
-                         runtime: movie.runtime,
-                         language: language,
-                         homepageLink: movie.homepage,
-                         popularity: movie.popularity ?? 0)
+    MovieViewData(id: movie.id,
+                  title: movie.title,
+                  posterImagePath: movie.posterPath,
+                  backdropImagePath: movie.backdropPath,
+                  ratingScore: movie.rating,
+                  releaseYear: movie.releaseDate,
+                  genres: genres,
+                  revenue: movie.revenue,
+                  description: movie.overview,
+                  runtime: movie.runtime,
+                  language: language,
+                  homepageLink: movie.homepage,
+                  popularity: movie.popularity ?? 0)
   }
 }

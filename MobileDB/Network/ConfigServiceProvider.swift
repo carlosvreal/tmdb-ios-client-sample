@@ -3,7 +3,6 @@
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/05/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import RxSwift
@@ -16,10 +15,8 @@ final class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtoco
   }
   
   func fetchConfig() -> Single<String> {
-    let requestType = MoviesAPI.configuration
-    
-    return Single.create { [weak self] single in
-      self?.session.executeRequest(with: requestType) { result in
+    Single.create { [weak self] single in
+      self?.session.executeRequest(with: MoviesAPI.configuration) { result in
         switch result {
         case .success(let data):
           guard let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
@@ -39,16 +36,16 @@ final class ConfigServiceProvider: ServiceProviderProtocol, ConfigServiceProtoco
     }
   }
   
-  func loadBackdropImage(for path: String) -> Single<UIImage> {
+  func loadBackdropImage(for path: String) -> Single<UIImage?> {
     return loadImage(for: MoviesAPI.backdropImage(path: path))
   }
   
-  func loadPoster(for path: String) -> Single<UIImage> {
+  func loadPoster(for path: String) -> Single<UIImage?> {
     return loadImage(for: MoviesAPI.posterImage(path: path))
   }
   
-  private func loadImage(for requestType: RequestableAPI) -> Single<UIImage> {
-    return Single.create { [weak self] single in
+  private func loadImage(for requestType: RequestableAPI) -> Single<UIImage?> {
+    Single.create { [weak self] single in
       self?.session.executeRequest(with: requestType) { result in
         switch result {
         case .success(let data):

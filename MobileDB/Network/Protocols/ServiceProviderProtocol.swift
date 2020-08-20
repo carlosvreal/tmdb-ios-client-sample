@@ -3,7 +3,6 @@
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/04/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import RxSwift
@@ -23,6 +22,6 @@ protocol MoviesServiceProtocol {
 
 protocol ConfigServiceProtocol {
   func fetchConfig() -> Single<String>
-  func loadBackdropImage(for path: String) -> Single<UIImage>
-  func loadPoster(for path: String) -> Single<UIImage>
+  func loadBackdropImage(for path: String) -> Single<UIImage?>
+  func loadPoster(for path: String) -> Single<UIImage?>
 }

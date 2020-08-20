@@ -3,7 +3,6 @@
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/05/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import UIKit
@@ -11,23 +10,31 @@ import RxSwift
 import RxDataSources
 
 final class MoviesViewController: UIViewController {
-  @IBOutlet private weak var tableView: UITableView!
-  @IBOutlet private weak var refreshMovies: UIBarButtonItem!
+  
+  // MARK: - Properties
+  @IBOutlet private weak var tableView: UITableView! {
+    didSet {
+      tableView.register(MovieViewCell.self)
+    }
+  }
+  @IBOutlet private weak var refreshMoviesButton: UIBarButtonItem!
   @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
-  @IBOutlet weak var empyStateLabel: UILabel!
+  @IBOutlet private weak var empyStateLabel: UILabel!
   
   private let disposeBag = DisposeBag()
   private let viewModel = MoviesViewModel()
   private let searchController = UISearchController(searchResultsController: nil)
-
+  private let viewDidLoadSubject = PublishSubject<Void>()
+  
+  // MARK: - Overriden functions
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    tableView.register(MovieViewCell.self)
     setupSearchBar()
-    setupOutletsBinds()
+    setupTableViewBinds()
+    setupObservables()
     
-    viewModel.loadMoviesList()
+    viewDidLoadSubject.onNext(())
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -43,97 +50,96 @@ final class MoviesViewController: UIViewController {
 private extension MoviesViewController {
   func setupSearchBar() {
     searchController.obscuresBackgroundDuringPresentation = false
-    searchController.searchBar.placeholder = "Search Movies"
+    searchController.searchBar.placeholder = Strings.Home.searchTitle
     searchController.isActive = true
     navigationItem.searchController = searchController
     definesPresentationContext = true
-
-    searchController.searchBar.rx.cancelButtonClicked
-      .bind(to: viewModel.willCancelSearch).disposed(by: disposeBag)
-    searchController.rx.didPresent
-      .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
-    
-    let searchQueryObservable = searchController.searchBar.rx.text.orEmpty
-      .debounce(0.5, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
-   
-    searchQueryObservable
-      .filter { !$0.isEmpty }
-      .bind(to: viewModel.searchMovieQuery).disposed(by: disposeBag)
-    
-    searchQueryObservable
-      .filter { $0.isEmpty }
-      .map { _ in }
-      .bind(to: viewModel.willCleanSearchResult).disposed(by: disposeBag)
-
-    searchController.searchBar.rx.cancelButtonClicked
-      .bind(to: viewModel.willCancelSearch)
-      .disposed(by: disposeBag)
   }
 }
 
-// MARK: - Setup table view bind and observables
+// MARK: - Setup tableview bind and observables
 private extension MoviesViewController {
-  func setupOutletsBinds() {
-    // TableView
-    viewModel.moviesDataSource.asObservable()
-      .bind(to: tableView.rx.items(cellIdentifier: MovieViewCell.identifier,
-                                   cellType: MovieViewCell.self)) {(_, movieViewModel, cell) in
-        cell.viewModel.setupData(with: movieViewModel)
-      }.disposed(by: disposeBag)
+  func setupTableViewBinds() {
+    viewModel
+      .dataSource
+      .asObservable()
+      .bind(to:
+        tableView.rx.items(cellIdentifier: MovieViewCell.identifier,
+                           cellType: MovieViewCell.self)) {(_, movie, cell) in
+                            let viewModel = MovieViewCellViewModel(model: movie,
+                                                                   service: ConfigServiceProvider())
+                            cell.setup(viewModel: viewModel)
+      }
+      .disposed(by: disposeBag)
     
-    viewModel.moviesDataSource.map { !($0.count > 0) }
-      .drive(tableView.rx.isHidden).disposed(by: disposeBag)
-    
-    // Triggers next page
     tableView.rx.willDisplayCell
       .map { [unowned self] (_, indexPath) -> Bool in
         let numberOfCells = 2
         return indexPath.item == self.tableView.numberOfRows(inSection: 0) - numberOfCells
       }
-      .filter { $0 == true }
-      .subscribe(onNext: { [weak self] _ in
-        self?.viewModel.nextPage.onNext(())
-      }).disposed(by: disposeBag)
-    
-    tableView.rx.willDisplayCell.do(onNext: { (cell, _) in
-      guard let cell = cell as? MovieViewCell else { return }
-      cell.viewModel.willDisplayCell()
-    }).subscribe()
+      .filter { $0 }
+      .map { _ in }
+      .bind(to: viewModel.bindLoadNextPage)
       .disposed(by: disposeBag)
     
-    // Loading indicator
-    viewModel.isLoadingData.map { !$0 }
-      .bind(to: loadingIndicator.rx.isHidden).disposed(by: disposeBag)
-    viewModel.isLoadingData
-      .bind(to: loadingIndicator.rx.isAnimating).disposed(by: disposeBag)
-    
-    // Refresh tap action
-    refreshMovies.rx.tap.asDriver().drive(viewModel.refresh).disposed(by: disposeBag)
-    
-    // Present MovieDetail
-    tableView.rx.modelSelected(MovieViewData.self)
-      .subscribe(onNext: { [weak self] model in
-        guard let id = model.id else { return }
-        self?.viewModel.willSearchMovieDetail.onNext("\(id)")
-      }).disposed(by: disposeBag)
-    
-    viewModel.didReceiveMovieDetail
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe(onNext: { [weak self] model in
-      self?.presentMovieDetail(with: model)
-    }).disposed(by: disposeBag)
+    tableView
+      .rx
+      .modelSelected(MovieViewData.self)
+      .asObservable()
+      .bind(to: viewModel.bindLoadMovieDetail)
+      .disposed(by: disposeBag)
   }
   
+  func setupObservables() {
+    let searchQueryObservable = searchController.searchBar.rx.text.orEmpty
+      .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+      .share()
+    
+    let cancelSearch = searchController.searchBar.rx.cancelButtonClicked.asObservable()
+    let refreshList = Observable.merge(cancelSearch, refreshMoviesButton.rx.tap.asObservable())
+    
+    disposeBag.insert(
+      viewModel
+        .bindLoadFirstPage(to: viewDidLoadSubject),
+      viewModel
+        .dataSource
+        .map { !($0.count > 0) }
+        .drive(tableView.rx.isHidden),
+      viewModel
+        .isLoadingData.map { !$0 }
+        .drive(loadingIndicator.rx.isHidden),
+      viewModel
+        .isLoadingData
+        .drive(loadingIndicator.rx.isAnimating),
+      viewModel
+        .bindRefresh(to: refreshList),
+      viewModel
+        .movieDetail
+        .drive(onNext: { [weak self] model in
+          self?.presentMovieDetail(with: model)
+        }),
+      viewModel
+        .bindSearchMovies(to: searchQueryObservable.filter { !$0.isEmpty }),
+      viewModel
+        .bindRefresh(to: refreshList),
+      viewModel
+        .bindResetData(to: searchController.rx.didPresent.asObservable().skip(1))
+    )
+  }
+}
+
+// MARK: - Movie detail
+private extension MoviesViewController {
   func presentMovieDetail(with model: MovieViewData) {
     let identifier = MovieDetailsViewController.identifier
-    guard let viewController = Storyboard.movieDetail.viewController(identifier) as? MovieDetailsViewController else {
+    guard let viewController = Storyboard.movieDetails.viewController(identifier) as? MovieDetailsViewController else {
       assertionFailure("MoviesViewController ViewController not found")
       return
     }
     
     let viewModel = MovieDetailsViewModel(model: model)
-    viewController.viewModel = viewModel
+    viewController.setup(viewModel: viewModel)
     
     navigationController?.pushViewController(viewController, animated: true)
   }

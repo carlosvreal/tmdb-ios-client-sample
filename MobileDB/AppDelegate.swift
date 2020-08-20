@@ -7,25 +7,28 @@
 //
 
 import UIKit
+import RxSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
   private let configService = ConfigServiceProvider()
+  private let disposeBag = DisposeBag()
   
   func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
-    setupConfig()
-    return true
-  }
-  
-  private func setupConfig() {
-    _ = configService.fetchConfig()
-      .asObservable().take(1).asSingle()
+    configService
+      .fetchConfig()
+      .asObservable()
+      .take(1)
+      .asSingle()
       .subscribe(onSuccess: { baseImageUrl in
         Settings.baseImageUrl = baseImageUrl
       })
+      .disposed(by: disposeBag)
+    
+    return true
   }
 }

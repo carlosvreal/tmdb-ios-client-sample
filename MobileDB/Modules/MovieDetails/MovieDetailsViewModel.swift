@@ -3,90 +3,103 @@
 //  MobileDB
 //
 //  Created by Carlos Vinicius on 8/06/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 import RxSwift
 import RxCocoa
 
-final class MovieDetailsViewModel {
-  let backdropImage = PublishSubject<UIImage>()
-  let titleMovie = BehaviorSubject<String>(value: "")
-  let releaseYear = BehaviorSubject<String>(value: "")
-  let runtime = BehaviorSubject<String>(value: "")
-  let language = BehaviorSubject<String>(value: "")
-  let ratingScore = BehaviorSubject<String>(value: "")
-  let descriptionMovie = BehaviorSubject<String>(value: "")
-  let genres = BehaviorSubject<String>(value: "")
-  let revenue = BehaviorSubject<String>(value: "")
-  let homepage = BehaviorSubject<String>(value: "")
+protocol MovieDetailsViewModelType {
+  var backdropImage: Driver<UIImage?> { get }
+  var titleMovie: Driver<String?> { get }
+  var screenTitle: Driver<String> { get }
+  var releaseYear: Driver<String?> { get }
+  var runtime: Driver<String?> { get }
+  var language: Driver<String?> { get }
+  var ratingScore: Driver<String?> { get }
+  var descriptionMovie: Driver<String?> { get }
+  var genres: Driver<String?> { get }
+  var revenue: Driver<String?> { get }
+  var homepage: Driver<String?> { get }
+  var openHomePage: Driver<String> { get }
+  
+  func bindHomePage(to observable: Observable<Void>) -> Disposable
+}
 
+struct MovieDetailsViewModel {
+  
   private let model: MovieViewData
   private let service: ConfigServiceProtocol
   private let disposeBag = DisposeBag()
+  private let openHomePageSubject = PublishSubject<String>()
   
   init(model: MovieViewData, service: ConfigServiceProtocol = ConfigServiceProvider()) {
     self.model = model
     self.service = service
   }
+}
 
-  func setupData() {
-    if let title = model.title {
-      titleMovie.onNext(title)
-    }
-    
-    if let releaseYear = model.releaseYear,
-      let year = releaseYear.split(separator: "-").first {
-      self.releaseYear.onNext(String(year))
-    }
-    
-    if let ratingScore = model.ratingScore {
-      let ratingFormatted = String(format: "%.1f", ratingScore)
-      self.ratingScore.onNext(ratingFormatted)
-    }
-    
-    if let genres = model.genres {
-      self.genres.onNext(genres.formatGenresAsString())
-    }
-    
-    if let runtime = model.runtime {
-      let formattedRuntime = formatTime(Double(runtime))
-      self.runtime.onNext(formattedRuntime)
-    }
-    
-    if let language = model.language {
-      self.language.onNext(language)
-    }
-    
-    if let description = model.description {
-      self.descriptionMovie.onNext(description)
-    }
-    
-    if let revenue = model.revenue,
-      let formattedRevenue = formatToCurrency(revenue) {
-      self.revenue.onNext(formattedRevenue)
-    }
-    
-    if let homepage = model.homepageLink {
-      self.homepage.onNext(homepage)
-    }
-    
-    setupLoadBackdropImage()
+// MARK: - MovieDetailsViewModelType
+extension MovieDetailsViewModel: MovieDetailsViewModelType {
+  var titleMovie: Driver<String?> {
+    .just(model.title)
+  }
+  var screenTitle: Driver<String> {
+    Observable.just(model.title)
+      .compactMap { $0}
+      .asDriver(onErrorJustReturn: "")
+  }
+  var releaseYear: Driver<String?> {
+    let year = model.releaseYear?.split(separator: "-").first ?? "-"
+    return .just(String(year))
+  }
+  var runtime: Driver<String?> {
+    let runtime = model.runtime.map { formatTime(Double($0)) }
+    return .just(runtime)
+  }
+  var language: Driver<String?> {
+    .just(model.language)
+  }
+  var ratingScore: Driver<String?> {
+    let ratingScore = model.ratingScore.map { String(format: "%.1f", $0) }
+    return .just(ratingScore)
+  }
+  var genres: Driver<String?> {
+    let genres = model.genres?.formatGenresAsString()
+    return .just(genres)
+  }
+  var descriptionMovie: Driver<String?> {
+    .just(model.description)
+  }
+  var revenue: Driver<String?> {
+    let revenue = model.revenue.map(formatToCurrency)?.flatMap { $0 }
+    return .just(revenue)
+  }
+  var homepage: Driver<String?> {
+    let homepage = model.homepageLink.map { !$0.isEmpty ? $0 : "-" }
+    return .just(homepage)
+  }
+  var backdropImage: Driver<UIImage?> {
+    Observable.just(model.backdropImagePath)
+      .compactMap { $0 }
+      .flatMapLatest {
+        self.service
+          .loadBackdropImage(for: $0)
+      }
+      .asDriver(onErrorJustReturn: nil)
+  }
+  var openHomePage: Driver<String> {
+    openHomePageSubject.asDriver(onErrorJustReturn: "")
+  }
+  
+  func bindHomePage(to observable: Observable<Void>) -> Disposable {
+    observable
+      .compactMap { self.model.homepageLink }
+      .bind(to: openHomePageSubject)
   }
 }
 
 // MARK: Utility methods
 private extension MovieDetailsViewModel {
-  func setupLoadBackdropImage() {
-    guard let backdrop = model.backdropImagePath else { return }
-    _ = service
-      .loadBackdropImage(for: backdrop)
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe(onSuccess: { [weak self] image in
-        self?.backdropImage.onNext(image)
-      })
-  }
-  
   func formatTime(_ movieRuntime: Double) -> String {
     guard movieRuntime > 60 else {
       return "\(Int(movieRuntime))m"
@@ -103,10 +116,7 @@ private extension MovieDetailsViewModel {
     formatter.numberStyle = .currency
     formatter.locale = Locale.current
     
-    guard let formattedValue = formatter.string(from: NSNumber(value: amount)) else {
-      return nil
-    }
-
+    guard let formattedValue = formatter.string(from: NSNumber(value: amount)) else { return nil }
     return formattedValue
   }
 }

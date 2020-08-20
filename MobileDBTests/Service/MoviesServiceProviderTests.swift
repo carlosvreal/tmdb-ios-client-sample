@@ -3,7 +3,6 @@
 //  MobileDBTests
 //
 //  Created by Carlos Vinicius on 8/05/18.
-//  Copyright © 2018 ArcTouch. All rights reserved.
 //
 
 @testable import MobileDB
@@ -23,20 +22,9 @@ class MoviesServiceProviderTests: XCTestCase {
     testScheduler = TestScheduler(initialClock: 0)
   }
   
-  override func tearDown() {
-    session = nil
-    testScheduler = nil
-    
-    super.tearDown()
-  }
-  
-  // MARK: Movies
-  
   func testValid_MovieList() {
-    let bundleTest = Bundle(for: type(of: self))
-    
     // given
-    let moviesData = StubData.moviesData(bundle: bundleTest)
+    let moviesData = StubData.moviesData()
     let stubResponse = Result.success(moviesData)
     session.mockDataResponse = MockDataResponse(response: stubResponse)
     
@@ -48,7 +36,7 @@ class MoviesServiceProviderTests: XCTestCase {
     
     // then
     let movies = observer.observeOn(MainScheduler.instance).toBlocking().firstOrNil()
-    XCTAssertEqual(movies?.results, StubData.stubMovies(data: moviesData))
+    XCTAssertEqual(movies?.results, StubData.stubMovies().results)
   }
   
   func testInvalidFormat_MovieList() {
@@ -87,10 +75,8 @@ class MoviesServiceProviderTests: XCTestCase {
   // MARK: Genre
   
   func testValid_GenresList() {
-    let bundleTest = Bundle(for: type(of: self))
-    
     // given
-    let genresData = StubData.genresData(bundle: bundleTest)
+    let genresData = StubData.genresData()
     let stubResponse = Result.success(genresData)
     session.mockDataResponse = MockDataResponse(response: stubResponse)
     
@@ -102,7 +88,7 @@ class MoviesServiceProviderTests: XCTestCase {
     
     // then
     let genres = observer.observeOn(MainScheduler.instance).toBlocking().firstOrNil()
-    XCTAssertEqual(genres!, StubData.stubGenres(data: genresData))
+    XCTAssertEqual(genres!, StubData.stubGenres())
   }
   
   func testInvalidFormat_GenreList() {
@@ -141,10 +127,8 @@ class MoviesServiceProviderTests: XCTestCase {
   // MARK: Search
   
   func testValid_SearchList() {
-    let bundleTest = Bundle(for: type(of: self))
-    
     // given
-    let moviesData = StubData.moviesData(bundle: bundleTest)
+    let moviesData = StubData.moviesData()
     let stubResponse = Result.success(moviesData)
     session.mockDataResponse = MockDataResponse(response: stubResponse)
     
@@ -156,7 +140,7 @@ class MoviesServiceProviderTests: XCTestCase {
     
     // then
     let movies = observer.observeOn(MainScheduler.instance).toBlocking().firstOrNil()
-    XCTAssertEqual(movies?.results, StubData.stubMovies(data: moviesData))
+    XCTAssertEqual(movies?.results, StubData.stubMovies().results)
   }
   
   func testInvalidFormat_SearchList() {
